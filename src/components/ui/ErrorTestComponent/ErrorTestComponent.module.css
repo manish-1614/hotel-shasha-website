@@ -1,0 +1,142 @@
+.testContainer {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  border: 2px dashed #e5e7eb;
+  border-radius: 12px;
+  background: #f9fafb;
+}
+
+.testContainer h3 {
+  margin-top: 0;
+  color: #374151;
+}
+
+.errorDisplay {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1rem 0;
+  color: #dc2626;
+}
+
+.testButtons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin: 2rem 0;
+}
+
+.loadingExamples {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.loadingExamples h4 {
+  margin-top: 0;
+  color: #374151;
+}
+
+.spinnerRow {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  margin: 1rem 0;
+  flex-wrap: wrap;
+}
+
+.imageTests {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.imageTests h4 {
+  margin-top: 0;
+  color: #374151;
+}
+
+.imageRow {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.imageTest {
+  flex: 1;
+  min-width: 200px;
+}
+
+.imageTest p {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #374151;
+}
+
+.errorBoundaryTest {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.errorBoundaryTest h4 {
+  margin-top: 0;
+  color: #374151;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .testContainer {
+    background: #1f2937;
+    border-color: #374151;
+  }
+
+  .testContainer h3 {
+    color: #f9fafb;
+  }
+
+  .loadingExamples,
+  .imageTests,
+  .errorBoundaryTest {
+    background: #111827;
+    border-color: #374151;
+  }
+
+  .loadingExamples h4,
+  .imageTests h4,
+  .errorBoundaryTest h4 {
+    color: #f9fafb;
+  }
+
+  .imageTest p {
+    color: #d1d5db;
+  }
+}
+
+/* Responsive design */
+@media (max-width: 640px) {
+  .testContainer {
+    margin: 1rem;
+    padding: 1rem;
+  }
+
+  .testButtons {
+    flex-direction: column;
+  }
+
+  .spinnerRow {
+    justify-content: center;
+  }
+
+  .imageRow {
+    flex-direction: column;
+  }
+}

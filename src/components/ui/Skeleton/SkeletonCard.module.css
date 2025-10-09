@@ -1,0 +1,32 @@
+.skeletonCard {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.imageContainer {
+  width: 100%;
+  overflow: hidden;
+}
+
+.content {
+  padding: 1.5rem;
+}
+
+.titleContainer {
+  margin-bottom: 1rem;
+}
+
+.descriptionContainer {
+  margin-top: 0.5rem;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .skeletonCard {
+    background: #1f2937;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  }
+}

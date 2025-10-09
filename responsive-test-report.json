@@ -1,0 +1,256 @@
+{
+  "timestamp": "2025-09-27T08:59:08.699Z",
+  "screenSizes": {
+    "iPhone SE": {
+      "width": 375,
+      "height": 667,
+      "type": "mobile"
+    },
+    "iPhone 12/13/14": {
+      "width": 390,
+      "height": 844,
+      "type": "mobile"
+    },
+    "iPhone 12/13/14 Pro Max": {
+      "width": 428,
+      "height": 926,
+      "type": "mobile"
+    },
+    "Samsung Galaxy S21": {
+      "width": 360,
+      "height": 800,
+      "type": "mobile"
+    },
+    "Samsung Galaxy Note": {
+      "width": 412,
+      "height": 915,
+      "type": "mobile"
+    },
+    "iPad Mini": {
+      "width": 768,
+      "height": 1024,
+      "type": "tablet"
+    },
+    "iPad Air": {
+      "width": 820,
+      "height": 1180,
+      "type": "tablet"
+    },
+    "iPad Pro 11\"": {
+      "width": 834,
+      "height": 1194,
+      "type": "tablet"
+    },
+    "iPad Pro 12.9\"": {
+      "width": 1024,
+      "height": 1366,
+      "type": "tablet"
+    },
+    "Surface Pro": {
+      "width": 912,
+      "height": 1368,
+      "type": "tablet"
+    },
+    "Small Desktop": {
+      "width": 1024,
+      "height": 768,
+      "type": "desktop"
+    },
+    "Medium Desktop": {
+      "width": 1280,
+      "height": 720,
+      "type": "desktop"
+    },
+    "Large Desktop": {
+      "width": 1440,
+      "height": 900,
+      "type": "desktop"
+    },
+    "Full HD": {
+      "width": 1920,
+      "height": 1080,
+      "type": "desktop"
+    },
+    "4K": {
+      "width": 3840,
+      "height": 2160,
+      "type": "desktop"
+    },
+    "Very narrow": {
+      "width": 320,
+      "height": 568,
+      "type": "mobile"
+    },
+    "Ultra-wide": {
+      "width": 2560,
+      "height": 1080,
+      "type": "desktop"
+    }
+  },
+  "breakpoints": {
+    "xs": 475,
+    "sm": 640,
+    "md": 768,
+    "lg": 1024,
+    "xl": 1280,
+    "2xl": 1536
+  },
+  "testResults": {
+    "passed": 5,
+    "failed": 1,
+    "warnings": 0,
+    "tests": [
+      {
+        "message": "✅ src/components/common/Header/Header.module.css: Mobile-first approach detected (1 min-width vs 1 max-width)",
+        "type": "passed",
+        "timestamp": "2025-09-27T08:59:08.277Z"
+      },
+      {
+        "message": "✅ src/app/globals.css: Mobile-first approach detected (0 min-width vs 0 max-width)",
+        "type": "passed",
+        "timestamp": "2025-09-27T08:59:08.306Z"
+      },
+      {
+        "message": "✅ src/styles/tokens.css: Mobile-first approach detected (0 min-width vs 0 max-width)",
+        "type": "passed",
+        "timestamp": "2025-09-27T08:59:08.324Z"
+      },
+      {
+        "message": "✅ Hero section uses responsive grid (mobile single-column, desktop split-screen) (Req: 5.1)",
+        "type": "passed",
+        "timestamp": "2025-09-27T08:59:08.372Z"
+      },
+      {
+        "message": "✅ Proper minimum height handling for mobile and desktop (Req: 5.2)",
+        "type": "passed",
+        "timestamp": "2025-09-27T08:59:08.388Z"
+      },
+      {
+        "message": "✅ Content ordering changes between mobile and desktop (Req: 5.1)",
+        "type": "passed",
+        "timestamp": "2025-09-27T08:59:08.402Z"
+      },
+      {
+        "message": "✅ Header.tsx: Touch feedback animations",
+        "type": "passed",
+        "timestamp": "2025-09-27T08:59:08.447Z"
+      },
+      {
+        "message": "⚠️  Header.tsx: Could improve touch-friendliness",
+        "type": "warning",
+        "timestamp": "2025-09-27T08:59:08.452Z"
+      },
+      {
+        "message": "✅ Hero.tsx: CSS touch-manipulation property",
+        "type": "passed",
+        "timestamp": "2025-09-27T08:59:08.470Z"
+      },
+      {
+        "message": "✅ Hero.tsx: Responsive padding for touch targets",
+        "type": "passed",
+        "timestamp": "2025-09-27T08:59:08.472Z"
+      },
+      {
+        "message": "✅ Hero.tsx: Responsive touch target sizes",
+        "type": "passed",
+        "timestamp": "2025-09-27T08:59:08.478Z"
+      },
+      {
+        "message": "✅ Hero.tsx: Touch feedback animations",
+        "type": "passed",
+        "timestamp": "2025-09-27T08:59:08.479Z"
+      },
+      {
+        "message": "✅ HamburgerIcon.tsx: CSS touch-manipulation property",
+        "type": "passed",
+        "timestamp": "2025-09-27T08:59:08.485Z"
+      },
+      {
+        "message": "✅ HamburgerIcon.tsx: Responsive padding for touch targets",
+        "type": "passed",
+        "timestamp": "2025-09-27T08:59:08.487Z"
+      },
+      {
+        "message": "✅ Multi-breakpoint responsive text sizing (Req: 5.6)",
+        "type": "passed",
+        "timestamp": "2025-09-27T08:59:08.501Z"
+      },
+      {
+        "message": "✅ Basic responsive text sizing (Req: 5.6)",
+        "type": "passed",
+        "timestamp": "2025-09-27T08:59:08.509Z"
+      },
+      {
+        "message": "✅ Proper line height management (Req: 5.6)",
+        "type": "passed",
+        "timestamp": "2025-09-27T08:59:08.511Z"
+      },
+      {
+        "message": "✅ Custom breakpoints defined in Tailwind config",
+        "type": "passed",
+        "timestamp": "2025-09-27T08:59:08.544Z"
+      },
+      {
+        "message": "✅ Breakpoint xs: 475px correctly defined",
+        "type": "passed",
+        "timestamp": "2025-09-27T08:59:08.548Z"
+      },
+      {
+        "message": "✅ Breakpoint sm: 640px correctly defined",
+        "type": "passed",
+        "timestamp": "2025-09-27T08:59:08.550Z"
+      },
+      {
+        "message": "✅ Breakpoint md: 768px correctly defined",
+        "type": "passed",
+        "timestamp": "2025-09-27T08:59:08.554Z"
+      },
+      {
+        "message": "✅ Breakpoint lg: 1024px correctly defined",
+        "type": "passed",
+        "timestamp": "2025-09-27T08:59:08.556Z"
+      },
+      {
+        "message": "✅ Breakpoint xl: 1280px correctly defined",
+        "type": "passed",
+        "timestamp": "2025-09-27T08:59:08.560Z"
+      },
+      {
+        "message": "✅ Breakpoint 2xl: 1536px correctly defined",
+        "type": "passed",
+        "timestamp": "2025-09-27T08:59:08.577Z"
+      },
+      {
+        "message": "✅ Header.tsx: Logo responsive sizing (Req: 2.5)",
+        "type": "passed",
+        "timestamp": "2025-09-27T08:59:08.618Z"
+      },
+      {
+        "message": "✅ Header.tsx: Responsive padding (Req: 2.5)",
+        "type": "passed",
+        "timestamp": "2025-09-27T08:59:08.623Z"
+      },
+      {
+        "message": "✅ Hero.tsx: Button layout responsive (Req: 5.4)",
+        "type": "passed",
+        "timestamp": "2025-09-27T08:59:08.640Z"
+      },
+      {
+        "message": "✅ Hero.tsx: Button width responsive (Req: 5.4)",
+        "type": "passed",
+        "timestamp": "2025-09-27T08:59:08.649Z"
+      },
+      {
+        "message": "✅ Hero.tsx: Text alignment responsive (Req: 5.1)",
+        "type": "passed",
+        "timestamp": "2025-09-27T08:59:08.671Z"
+      }
+    ]
+  },
+  "recommendations": [
+    "Fix failed responsive tests to ensure proper layout on all devices",
+    "Test on actual devices to validate responsive behavior",
+    "Use browser dev tools to simulate different screen sizes",
+    "Consider implementing responsive images with srcset"
+  ]
+}

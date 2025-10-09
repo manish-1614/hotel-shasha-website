@@ -1,0 +1,221 @@
+{
+  "timestamp": "2025-09-27T08:59:09.279Z",
+  "performanceThresholds": {
+    "LCP": 2.5,
+    "FID": 100,
+    "CLS": 0.1,
+    "FCP": 1.8,
+    "TTI": 3.8,
+    "TBT": 200,
+    "maxImageSize": 500,
+    "maxVideoSize": 2000,
+    "maxJSBundle": 1000,
+    "maxCSSBundle": 100
+  },
+  "mobileOptimizations": {
+    "images": [
+      "lazy loading",
+      "responsive images",
+      "WebP format",
+      "proper sizing"
+    ],
+    "videos": [
+      "lazy loading",
+      "poster images",
+      "compression",
+      "fallback images"
+    ],
+    "animations": [
+      "reduced motion support",
+      "GPU acceleration",
+      "performance monitoring"
+    ],
+    "loading": [
+      "code splitting",
+      "preloading",
+      "critical CSS",
+      "resource hints"
+    ],
+    "caching": [
+      "service worker",
+      "cache headers",
+      "static assets"
+    ]
+  },
+  "testResults": {
+    "passed": 1,
+    "failed": 5,
+    "warnings": 8,
+    "tests": [
+      {
+        "message": "✅ OptimizedImage.tsx: Next.js Image component for optimization",
+        "type": "passed",
+        "timestamp": "2025-09-27T08:59:09.137Z"
+      },
+      {
+        "message": "⚠️  OptimizedImage.tsx: Could improve image optimization",
+        "type": "warning",
+        "timestamp": "2025-09-27T08:59:09.139Z"
+      },
+      {
+        "message": "✅ Hero.tsx: Next.js Image component for optimization",
+        "type": "passed",
+        "timestamp": "2025-09-27T08:59:09.142Z"
+      },
+      {
+        "message": "⚠️  Hero.tsx: Could improve image optimization",
+        "type": "warning",
+        "timestamp": "2025-09-27T08:59:09.147Z"
+      },
+      {
+        "message": "✅ OptimizedVideo.tsx: Lazy loading for videos",
+        "type": "passed",
+        "timestamp": "2025-09-27T08:59:09.157Z"
+      },
+      {
+        "message": "✅ OptimizedVideo.tsx: Poster images for better loading",
+        "type": "passed",
+        "timestamp": "2025-09-27T08:59:09.159Z"
+      },
+      {
+        "message": "✅ OptimizedVideo.tsx: Inline playback for iOS",
+        "type": "passed",
+        "timestamp": "2025-09-27T08:59:09.162Z"
+      },
+      {
+        "message": "⚠️  OptimizedVideo.tsx: Could improve video optimization",
+        "type": "warning",
+        "timestamp": "2025-09-27T08:59:09.163Z"
+      },
+      {
+        "message": "✅ useVideoOptimization.ts: Lazy loading for videos",
+        "type": "passed",
+        "timestamp": "2025-09-27T08:59:09.167Z"
+      },
+      {
+        "message": "✅ useVideoOptimization.ts: Metadata preloading",
+        "type": "passed",
+        "timestamp": "2025-09-27T08:59:09.169Z"
+      },
+      {
+        "message": "✅ useVideoOptimization.ts: Inline playback for iOS",
+        "type": "passed",
+        "timestamp": "2025-09-27T08:59:09.171Z"
+      },
+      {
+        "message": "⚠️  useVideoOptimization.ts: Could improve video optimization",
+        "type": "warning",
+        "timestamp": "2025-09-27T08:59:09.171Z"
+      },
+      {
+        "message": "✅ animations.ts: GPU-accelerated transforms",
+        "type": "passed",
+        "timestamp": "2025-09-27T08:59:09.179Z"
+      },
+      {
+        "message": "✅ animations.ts: Controlled animation durations",
+        "type": "passed",
+        "timestamp": "2025-09-27T08:59:09.180Z"
+      },
+      {
+        "message": "⚠️  animations.ts: Could improve animation performance",
+        "type": "warning",
+        "timestamp": "2025-09-27T08:59:09.181Z"
+      },
+      {
+        "message": "✅ useReducedMotion.ts: Reduced motion accessibility support",
+        "type": "passed",
+        "timestamp": "2025-09-27T08:59:09.185Z"
+      },
+      {
+        "message": "⚠️  useReducedMotion.ts: Could improve animation performance",
+        "type": "warning",
+        "timestamp": "2025-09-27T08:59:09.186Z"
+      },
+      {
+        "message": "✅ Hero.tsx: Reduced motion accessibility support",
+        "type": "passed",
+        "timestamp": "2025-09-27T08:59:09.189Z"
+      },
+      {
+        "message": "✅ Hero.tsx: GPU-accelerated transforms",
+        "type": "passed",
+        "timestamp": "2025-09-27T08:59:09.190Z"
+      },
+      {
+        "message": "✅ Hero.tsx: Controlled animation durations",
+        "type": "passed",
+        "timestamp": "2025-09-27T08:59:09.193Z"
+      },
+      {
+        "message": "⚠️  next.config.ts: Could improve loading optimizations",
+        "type": "warning",
+        "timestamp": "2025-09-27T08:59:09.200Z"
+      },
+      {
+        "message": "✅ package.json: Next.js framework for optimization",
+        "type": "passed",
+        "timestamp": "2025-09-27T08:59:09.203Z"
+      },
+      {
+        "message": "✅ package.json: Optimized animation library",
+        "type": "passed",
+        "timestamp": "2025-09-27T08:59:09.204Z"
+      },
+      {
+        "message": "✅ Header.tsx: Client-side only rendering for heavy components",
+        "type": "passed",
+        "timestamp": "2025-09-27T08:59:09.215Z"
+      },
+      {
+        "message": "⚠️  Header.tsx: Could improve responsive performance",
+        "type": "warning",
+        "timestamp": "2025-09-27T08:59:09.218Z"
+      },
+      {
+        "message": "✅ Hero.tsx: Client-side only rendering for heavy components",
+        "type": "passed",
+        "timestamp": "2025-09-27T08:59:09.226Z"
+      },
+      {
+        "message": "✅ Hero.tsx: Intersection Observer for efficient scrolling",
+        "type": "passed",
+        "timestamp": "2025-09-27T08:59:09.229Z"
+      },
+      {
+        "message": "✅ src/app/globals.css: CSS containment for performance",
+        "type": "passed",
+        "timestamp": "2025-09-27T08:59:09.261Z"
+      },
+      {
+        "message": "✅ src/components/common/Header/Header.module.css: will-change property for animation optimization",
+        "type": "passed",
+        "timestamp": "2025-09-27T08:59:09.271Z"
+      }
+    ],
+    "optimizations": []
+  },
+  "recommendations": [
+    "Monitor Core Web Vitals (LCP, FID, CLS) regularly",
+    "Use Lighthouse for performance auditing",
+    "Implement resource hints (preload, prefetch, preconnect)",
+    "Test on actual mobile devices with throttled networks",
+    "Optimize images with WebP format and proper sizing",
+    "Use lazy loading for below-the-fold content",
+    "Minimize JavaScript bundle size with code splitting",
+    "Use transform and opacity for animations (GPU-accelerated)",
+    "Respect prefers-reduced-motion for accessibility",
+    "Avoid animating layout properties (width, height, margin)",
+    "Implement critical CSS inlining",
+    "Use service worker for caching strategies",
+    "Optimize font loading with font-display: swap",
+    "Address performance warnings to improve mobile experience"
+  ],
+  "nextSteps": [
+    "Run Lighthouse audit on actual mobile devices",
+    "Test with slow 3G network throttling",
+    "Monitor real user metrics (RUM)",
+    "Implement performance budgets in CI/CD",
+    "Use WebPageTest for detailed performance analysis"
+  ]
+}

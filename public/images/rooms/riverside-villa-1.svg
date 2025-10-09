@@ -1,0 +1,85 @@
+<svg width="800" height="600" viewBox="0 0 800 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="villaBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#eff6ff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#dbeafe;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="luxuryBed" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e40af;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="water" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0ea5e9;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0284c7;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Villa background -->
+  <rect width="800" height="600" fill="url(#villaBg)"/>
+  
+  <!-- Marble floor -->
+  <rect x="0" y="450" width="800" height="150" fill="#e5e7eb" opacity="0.6"/>
+  <rect x="0" y="470" width="800" height="5" fill="#d1d5db" opacity="0.8"/>
+  <rect x="0" y="490" width="800" height="5" fill="#d1d5db" opacity="0.8"/>
+  
+  <!-- King size bed -->
+  <rect x="200" y="250" width="400" height="180" rx="12" fill="url(#luxuryBed)" opacity="0.8"/>
+  <rect x="180" y="230" width="440" height="40" rx="20" fill="#1d4ed8" opacity="0.9"/>
+  
+  <!-- Luxury pillows and bedding -->
+  <ellipse cx="280" cy="270" rx="40" ry="20" fill="#60a5fa" opacity="0.9"/>
+  <ellipse cx="380" cy="270" rx="40" ry="20" fill="#60a5fa" opacity="0.9"/>
+  <ellipse cx="480" cy="270" rx="40" ry="20" fill="#60a5fa" opacity="0.9"/>
+  <ellipse cx="520" cy="270" rx="40" ry="20" fill="#60a5fa" opacity="0.9"/>
+  
+  <!-- Jacuzzi -->
+  <ellipse cx="650" cy="380" rx="80" ry="50" fill="url(#water)" opacity="0.8"/>
+  <ellipse cx="650" cy="375" rx="70" ry="40" fill="#0ea5e9" opacity="0.6"/>
+  <!-- Bubbles -->
+  <circle cx="630" cy="370" r="3" fill="#bfdbfe" opacity="0.8"/>
+  <circle cx="650" cy="365" r="4" fill="#bfdbfe" opacity="0.8"/>
+  <circle cx="670" cy="375" r="3" fill="#bfdbfe" opacity="0.8"/>
+  <circle cx="640" cy="385" r="2" fill="#bfdbfe" opacity="0.8"/>
+  
+  <!-- Riverside window -->
+  <rect x="450" y="50" width="300" height="150" fill="#eff6ff" stroke="#1e40af" stroke-width="4"/>
+  <line x1="600" y1="50" x2="600" y2="200" stroke="#1e40af" stroke-width="2"/>
+  <line x1="450" y1="125" x2="750" y2="125" stroke="#1e40af" stroke-width="2"/>
+  
+  <!-- River view -->
+  <rect x="470" y="170" width="260" height="25" fill="url(#water)" opacity="0.7"/>
+  <!-- Water ripples -->
+  <path d="M480,180 Q500,175 520,180 T560,180" stroke="#0284c7" stroke-width="2" fill="none" opacity="0.6"/>
+  <path d="M580,185 Q600,180 620,185 T660,185" stroke="#0284c7" stroke-width="2" fill="none" opacity="0.6"/>
+  <path d="M680,182 Q700,177 720,182" stroke="#0284c7" stroke-width="2" fill="none" opacity="0.6"/>
+  
+  <!-- Trees by river -->
+  <circle cx="500" cy="120" r="15" fill="#059669" opacity="0.7"/>
+  <circle cx="550" cy="110" r="18" fill="#10b981" opacity="0.7"/>
+  <circle cx="600" cy="125" r="12" fill="#059669" opacity="0.7"/>
+  <circle cx="680" cy="115" r="20" fill="#10b981" opacity="0.7"/>
+  
+  <!-- Luxury seating area -->
+  <rect x="50" y="300" width="120" height="100" rx="10" fill="#1e40af" opacity="0.7"/>
+  <circle cx="110" cy="350" r="35" fill="#3b82f6" opacity="0.8"/>
+  <rect x="70" y="320" width="80" height="15" rx="7" fill="#60a5fa" opacity="0.9"/>
+  
+  <!-- Private deck -->
+  <rect x="0" y="500" width="200" height="100" fill="#92400e" opacity="0.4"/>
+  <rect x="10" y="510" width="180" height="10" fill="#7c2d12" opacity="0.6"/>
+  <rect x="10" y="530" width="180" height="10" fill="#7c2d12" opacity="0.6"/>
+  <rect x="10" y="550" width="180" height="10" fill="#7c2d12" opacity="0.6"/>
+  
+  <!-- Crystal chandelier -->
+  <circle cx="400" cy="100" r="30" fill="#fbbf24" opacity="0.9"/>
+  <circle cx="380" cy="120" r="8" fill="#f59e0b" opacity="0.8"/>
+  <circle cx="400" cy="125" r="10" fill="#f59e0b" opacity="0.8"/>
+  <circle cx="420" cy="120" r="8" fill="#f59e0b" opacity="0.8"/>
+  <circle cx="390" cy="135" r="6" fill="#fbbf24" opacity="0.8"/>
+  <circle cx="410" cy="135" r="6" fill="#fbbf24" opacity="0.8"/>
+  <line x1="400" y1="70" x2="400" y2="30" stroke="#1e40af" stroke-width="3"/>
+  
+  <!-- Text overlay -->
+  <rect x="0" y="520" width="800" height="80" fill="rgba(0,0,0,0.7)"/>
+  <text x="400" y="570" text-anchor="middle" fill="white" font-family="serif" font-size="24" font-weight="bold">Luxury Riverside Villa</text>
+</svg>

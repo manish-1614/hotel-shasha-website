@@ -1,0 +1,257 @@
+{
+  "passed": 46,
+  "failed": 1,
+  "warnings": 3,
+  "details": [
+    {
+      "timestamp": "2025-09-24T18:56:08.250Z",
+      "message": "Required file exists: src/app/page.tsx",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T18:56:08.254Z",
+      "message": "Required file exists: src/app/layout.tsx",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T18:56:08.255Z",
+      "message": "Required file exists: src/components/common/Header/Header.tsx",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T18:56:08.257Z",
+      "message": "Required file exists: src/components/common/Footer/Footer.tsx",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T18:56:08.257Z",
+      "message": "Required file exists: src/components/sections/Hero/Hero.tsx",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T18:56:08.258Z",
+      "message": "Required file exists: src/components/sections/Rooms/Rooms.tsx",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T18:56:08.259Z",
+      "message": "Required file exists: src/components/sections/Dining/Dining.tsx",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T18:56:08.261Z",
+      "message": "Required file exists: src/components/sections/Amenities/Amenities.tsx",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T18:56:08.261Z",
+      "message": "Required file exists: src/components/sections/Location/Location.tsx",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T18:56:08.262Z",
+      "message": "Required file exists: src/components/sections/Contact/Contact.tsx",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T18:56:08.263Z",
+      "message": "Required file exists: src/components/common/Newsletter/Newsletter.tsx",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T18:56:08.267Z",
+      "message": "Found 6 components in src/components/common",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T18:56:08.269Z",
+      "message": "Component Footer has main TSX file",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T18:56:08.270Z",
+      "message": "Component Header has main TSX file",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T18:56:08.271Z",
+      "message": "Component Layout has main TSX file",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T18:56:08.272Z",
+      "message": "Component Navigation missing main TSX file",
+      "type": "warning"
+    },
+    {
+      "timestamp": "2025-09-24T18:56:08.273Z",
+      "message": "Component Newsletter has main TSX file",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T18:56:08.274Z",
+      "message": "Found 7 components in src/components/sections",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T18:56:08.274Z",
+      "message": "Component Amenities has main TSX file",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T18:56:08.275Z",
+      "message": "Component Contact has main TSX file",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T18:56:08.276Z",
+      "message": "Component Dining has main TSX file",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T18:56:08.277Z",
+      "message": "Component Hero has main TSX file",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T18:56:08.279Z",
+      "message": "Component Location has main TSX file",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T18:56:08.279Z",
+      "message": "Component Rooms has main TSX file",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T18:56:08.280Z",
+      "message": "Found 18 components in src/components/ui",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T18:56:08.281Z",
+      "message": "Component AnimatedSection has main TSX file",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T18:56:08.282Z",
+      "message": "Component Button has main TSX file",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T18:56:08.283Z",
+      "message": "Component Card has main TSX file",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T18:56:08.284Z",
+      "message": "Component ClientOnly has main TSX file",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T18:56:08.286Z",
+      "message": "Component ErrorBoundary has main TSX file",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T18:56:08.287Z",
+      "message": "Component ErrorTestComponent has main TSX file",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T18:56:08.287Z",
+      "message": "Component Form missing main TSX file",
+      "type": "warning"
+    },
+    {
+      "timestamp": "2025-09-24T18:56:08.289Z",
+      "message": "Component ImageGallery has main TSX file",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T18:56:08.290Z",
+      "message": "Component LoadingSpinner has main TSX file",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T18:56:08.290Z",
+      "message": "Component Map has main TSX file",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T18:56:08.291Z",
+      "message": "Component Modal has main TSX file",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T18:56:08.292Z",
+      "message": "Component OptimizedImage has main TSX file",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T18:56:08.293Z",
+      "message": "Component ParallaxBackground has main TSX file",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T18:56:08.294Z",
+      "message": "Component ParallaxSection has main TSX file",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T18:56:08.295Z",
+      "message": "Component ScrollProgressIndicator has main TSX file",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T18:56:08.296Z",
+      "message": "Component ScrollToTop has main TSX file",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T18:56:08.297Z",
+      "message": "Component Skeleton has main TSX file",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T18:56:08.299Z",
+      "message": "Style file exists: src/styles/globals.css",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T18:56:08.300Z",
+      "message": "Style file exists: src/styles/tokens.css",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T18:56:08.300Z",
+      "message": "Style file exists: tailwind.config.js",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T18:56:08.302Z",
+      "message": "API route exists: src/app/api/contact/route.ts",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T18:56:08.303Z",
+      "message": "API route src/app/api/contact/route.ts has POST handler",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T18:56:12.172Z",
+      "message": "TypeScript compilation successful",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T18:56:18.549Z",
+      "message": "ESLint found issues: Command failed: npm run lint",
+      "type": "warning"
+    },
+    {
+      "timestamp": "2025-09-24T18:57:05.528Z",
+      "message": "Build process failed: Command failed: npm run build\n[Error: ENOENT: no such file or directory, open 'D:\\Projects\\shasha\\hotel-shasha-website\\.next\\next-server.js.nft.json'] {\n  errno: -4058,\n  code: 'ENOENT',\n  syscall: 'open',\n  path: 'D:\\\\Projects\\\\shasha\\\\hotel-shasha-website\\\\.next\\\\next-server.js.nft.json'\n}\n",
+      "type": "error"
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+.amenitiesSkeletonSection {
+  padding: 5rem 0;
+  background: var(--color-background);
+}
+
+.headerSkeleton {
+  text-align: center;
+  margin-bottom: 4rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.titleSkeleton {
+  margin: 0 auto 2rem auto;
+}
+
+.descriptionSkeleton {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.amenitiesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.amenityCardSkeleton {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  padding: 2rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.amenityIconSkeleton {
+  flex-shrink: 0;
+}
+
+.amenityContent {
+  flex: 1;
+}
+
+.amenityTitle {
+  margin-bottom: 1rem;
+}
+
+.amenityDescription {
+  margin-top: 0.5rem;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .amenityCardSkeleton {
+    background: var(--color-gray-800);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .amenitiesSkeletonSection {
+    padding: 3rem 0;
+  }
+
+  .headerSkeleton {
+    margin-bottom: 2rem;
+  }
+
+  .amenitiesGrid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .amenityCardSkeleton {
+    padding: 1.5rem;
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .amenityCardSkeleton {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .amenityIconSkeleton {
+    align-self: center;
+  }
+}

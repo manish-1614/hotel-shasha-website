@@ -1,0 +1,60 @@
+<svg width="1920" height="1080" viewBox="0 0 1920 1080" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="diningGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#dc2626;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#ef4444;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f87171;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="warmGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#fef3c7;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#fde68a;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Dining room background -->
+  <rect width="1920" height="1080" fill="url(#warmGradient)"/>
+  
+  <!-- Floor -->
+  <rect x="0" y="700" width="1920" height="380" fill="#92400e" opacity="0.3"/>
+  
+  <!-- Tables -->
+  <ellipse cx="500" cy="600" rx="120" ry="80" fill="#7c2d12" opacity="0.8"/>
+  <ellipse cx="1000" cy="550" rx="120" ry="80" fill="#7c2d12" opacity="0.8"/>
+  <ellipse cx="1400" cy="620" rx="120" ry="80" fill="#7c2d12" opacity="0.8"/>
+  
+  <!-- Chairs -->
+  <rect x="450" y="520" width="40" height="60" rx="20" fill="#991b1b" opacity="0.7"/>
+  <rect x="510" y="520" width="40" height="60" rx="20" fill="#991b1b" opacity="0.7"/>
+  <rect x="950" y="470" width="40" height="60" rx="20" fill="#991b1b" opacity="0.7"/>
+  <rect x="1010" y="470" width="40" height="60" rx="20" fill="#991b1b" opacity="0.7"/>
+  
+  <!-- Food items -->
+  <circle cx="500" cy="580" r="15" fill="#fbbf24" opacity="0.9"/>
+  <circle cx="520" cy="590" r="12" fill="#f59e0b" opacity="0.9"/>
+  <circle cx="480" cy="600" r="10" fill="#d97706" opacity="0.9"/>
+  
+  <circle cx="1000" cy="530" r="15" fill="#fbbf24" opacity="0.9"/>
+  <circle cx="1020" cy="540" r="12" fill="#f59e0b" opacity="0.9"/>
+  <circle cx="980" cy="550" r="10" fill="#d97706" opacity="0.9"/>
+  
+  <!-- Kitchen area -->
+  <rect x="100" y="300" width="400" height="200" fill="#7c2d12" opacity="0.6"/>
+  <rect x="120" y="320" width="60" height="40" fill="#fbbf24" opacity="0.8"/>
+  <rect x="200" y="320" width="60" height="40" fill="#fbbf24" opacity="0.8"/>
+  <rect x="280" y="320" width="60" height="40" fill="#fbbf24" opacity="0.8"/>
+  
+  <!-- Windows with mountain view -->
+  <rect x="1500" y="150" width="300" height="250" fill="#ddd6fe" stroke="#7c2d12" stroke-width="6"/>
+  <polygon points="1520,380 1580,200 1640,250 1700,180 1760,230 1780,200 1780,380" fill="#3b82f6" opacity="0.6"/>
+  
+  <!-- Hanging lights -->
+  <circle cx="500" cy="200" r="25" fill="#fbbf24" opacity="0.8"/>
+  <line x1="500" y1="175" x2="500" y2="100" stroke="#7c2d12" stroke-width="3"/>
+  <circle cx="1000" cy="180" r="25" fill="#fbbf24" opacity="0.8"/>
+  <line x1="1000" y1="155" x2="1000" y2="80" stroke="#7c2d12" stroke-width="3"/>
+  <circle cx="1400" cy="220" r="25" fill="#fbbf24" opacity="0.8"/>
+  <line x1="1400" y1="195" x2="1400" y2="120" stroke="#7c2d12" stroke-width="3"/>
+  
+  <!-- Text overlay -->
+  <text x="960" y="900" text-anchor="middle" fill="#7c2d12" font-family="serif" font-size="48" font-weight="bold">Authentic Himachali Dining</text>
+</svg>

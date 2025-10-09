@@ -1,0 +1,49 @@
+.progressContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  z-index: 110;
+  transform-origin: left;
+}
+
+.progressBar {
+  height: 100%;
+  background: linear-gradient(90deg, 
+    rgb(37, 99, 235) 0%, 
+    rgb(59, 130, 246) 50%, 
+    rgb(147, 197, 253) 100%
+  );
+  transform-origin: left;
+  border-radius: 0 2px 2px 0;
+  box-shadow: 0 0 10px rgba(37, 99, 235, 0.3);
+}
+
+/* Smooth animation for progress bar */
+.progressBar {
+  transition: transform 0.1s ease-out;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .progressContainer {
+    height: 2px;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .progressBar {
+    background: rgb(37, 99, 235);
+    box-shadow: none;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .progressBar {
+    transition: none;
+  }
+}

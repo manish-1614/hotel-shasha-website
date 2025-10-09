@@ -1,0 +1,68 @@
+<svg width="800" height="600" viewBox="0 0 800 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="cottageBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#fef7ed;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#fed7aa;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="woodGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#92400e;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#c2410c;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Cottage background -->
+  <rect width="800" height="600" fill="url(#cottageBg)"/>
+  
+  <!-- Wooden floor -->
+  <rect x="0" y="450" width="800" height="150" fill="#7c2d12" opacity="0.4"/>
+  <!-- Wood planks -->
+  <line x1="0" y1="470" x2="800" y2="470" stroke="#92400e" stroke-width="2" opacity="0.6"/>
+  <line x1="0" y1="490" x2="800" y2="490" stroke="#92400e" stroke-width="2" opacity="0.6"/>
+  <line x1="0" y1="510" x2="800" y2="510" stroke="#92400e" stroke-width="2" opacity="0.6"/>
+  
+  <!-- Wooden bed frame -->
+  <rect x="250" y="300" width="300" height="150" rx="5" fill="url(#woodGradient)" opacity="0.8"/>
+  <rect x="240" y="290" width="320" height="20" rx="10" fill="#7c2d12" opacity="0.9"/>
+  <rect x="240" y="440" width="320" height="20" rx="10" fill="#7c2d12" opacity="0.9"/>
+  
+  <!-- Rustic bedding -->
+  <rect x="270" y="320" width="260" height="100" rx="5" fill="#dc2626" opacity="0.6"/>
+  <ellipse cx="350" cy="340" rx="30" ry="15" fill="#fbbf24" opacity="0.8"/>
+  <ellipse cx="450" cy="340" rx="30" ry="15" fill="#fbbf24" opacity="0.8"/>
+  
+  <!-- Fireplace -->
+  <rect x="50" y="250" width="120" height="100" rx="5" fill="#7c2d12" opacity="0.8"/>
+  <rect x="70" y="270" width="80" height="60" rx="3" fill="#1f2937" opacity="0.9"/>
+  <!-- Fire -->
+  <polygon points="90,320 100,290 110,320" fill="#dc2626" opacity="0.8"/>
+  <polygon points="110,320 120,285 130,320" fill="#f59e0b" opacity="0.8"/>
+  <polygon points="130,320 140,290 150,320" fill="#dc2626" opacity="0.8"/>
+  
+  <!-- Window with garden view -->
+  <rect x="550" y="150" width="180" height="150" fill="#fef7ed" stroke="#92400e" stroke-width="4"/>
+  <line x1="640" y1="150" x2="640" y2="300" stroke="#92400e" stroke-width="2"/>
+  <line x1="550" y1="225" x2="730" y2="225" stroke="#92400e" stroke-width="2"/>
+  
+  <!-- Garden view -->
+  <rect x="570" y="270" width="140" height="20" fill="#059669" opacity="0.7"/>
+  <circle cx="600" cy="200" r="15" fill="#10b981" opacity="0.8"/>
+  <circle cx="650" cy="190" r="12" fill="#10b981" opacity="0.8"/>
+  <circle cx="700" cy="205" r="18" fill="#10b981" opacity="0.8"/>
+  
+  <!-- Rustic furniture -->
+  <rect x="600" y="400" width="80" height="50" rx="3" fill="#92400e" opacity="0.7"/>
+  <circle cx="640" cy="425" r="20" fill="#fbbf24" opacity="0.6"/>
+  
+  <!-- Wooden beams -->
+  <rect x="0" y="80" width="800" height="15" fill="#7c2d12" opacity="0.6"/>
+  <rect x="200" y="0" width="15" height="600" fill="#7c2d12" opacity="0.4"/>
+  <rect x="600" y="0" width="15" height="600" fill="#7c2d12" opacity="0.4"/>
+  
+  <!-- Oil lamp -->
+  <circle cx="150" cy="180" r="12" fill="#fbbf24" opacity="0.9"/>
+  <rect x="145" y="192" width="10" height="20" fill="#7c2d12" opacity="0.8"/>
+  
+  <!-- Text overlay -->
+  <rect x="0" y="520" width="800" height="80" fill="rgba(0,0,0,0.7)"/>
+  <text x="400" y="570" text-anchor="middle" fill="white" font-family="serif" font-size="24" font-weight="bold">Traditional Cottage</text>
+</svg>

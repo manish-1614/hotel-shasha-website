@@ -1,0 +1,214 @@
+.dining {
+  padding: 5rem 0;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.dining::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="%23e2e8f0" opacity="0.3"/><circle cx="75" cy="75" r="1" fill="%23cbd5e1" opacity="0.2"/><circle cx="50" cy="10" r="0.5" fill="%23e2e8f0" opacity="0.4"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>') repeat;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.dining > * {
+  position: relative;
+  z-index: 1;
+}
+
+.splitScreen {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+  min-height: 70vh;
+  margin-top: 2rem;
+}
+
+@media (max-width: 1024px) {
+  .splitScreen {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    min-height: auto;
+  }
+}
+
+.contentSide {
+  padding: 2rem 0;
+}
+
+.contentWrapper {
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: 0;
+}
+
+@media (max-width: 1024px) {
+  .contentWrapper {
+    margin: 0 auto;
+    max-width: 100%;
+  }
+}
+
+.imageSide {
+  position: relative;
+  height: 600px;
+}
+
+@media (max-width: 1024px) {
+  .imageSide {
+    height: 500px;
+    order: -1;
+  }
+}
+
+@media (max-width: 640px) {
+  .imageSide {
+    height: 400px;
+  }
+}
+
+.imageGrid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 1rem;
+  height: 100%;
+}
+
+.mainImage {
+  grid-row: 1 / -1;
+  position: relative;
+  border-radius: 1rem;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+}
+
+.mainImage:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15);
+}
+
+.smallImagesGrid {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: 1rem;
+}
+
+.smallImagesGrid > div:first-child {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.smallImagesGrid > div:last-child {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.smallImage {
+  position: relative;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+  min-height: 120px;
+}
+
+.smallImage:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.imagePlaceholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border: 2px dashed #cbd5e1;
+}
+
+.imageOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.8) 0%, rgba(59, 130, 246, 0.8) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.mainImage:hover .imageOverlay,
+.smallImage:hover .imageOverlay {
+  opacity: 1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .dining {
+    padding: 3rem 0;
+  }
+  
+  .imageGrid {
+    grid-template-columns: 1fr;
+    grid-template-rows: 2fr 1fr;
+  }
+  
+  .mainImage {
+    grid-row: 1;
+  }
+  
+  .smallImagesGrid {
+    grid-template-rows: 1fr;
+    grid-template-columns: repeat(4, 1fr);
+  }
+  
+  .smallImagesGrid > div {
+    display: contents;
+  }
+  
+  .smallImage {
+    min-height: 80px;
+  }
+}
+
+/* Animation classes for scroll-triggered animations */
+.fadeInUp {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.fadeInUp.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.staggered {
+  transition-delay: 0.1s;
+}
+
+.staggered:nth-child(2) {
+  transition-delay: 0.2s;
+}
+
+.staggered:nth-child(3) {
+  transition-delay: 0.3s;
+}
+
+.staggered:nth-child(4) {
+  transition-delay: 0.4s;
+}

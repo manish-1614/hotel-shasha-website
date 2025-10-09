@@ -1,0 +1,47 @@
+<svg width="1920" height="1080" viewBox="0 0 1920 1080" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="roomGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#7c3aed;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#a855f7;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#c084fc;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="interiorGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#f3e8ff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ddd6fe;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Room background -->
+  <rect width="1920" height="1080" fill="url(#interiorGradient)"/>
+  
+  <!-- Room walls -->
+  <rect x="0" y="0" width="1920" height="300" fill="#8b5cf6" opacity="0.3"/>
+  <rect x="0" y="780" width="1920" height="300" fill="#7c3aed" opacity="0.4"/>
+  
+  <!-- Bed -->
+  <rect x="600" y="400" width="720" height="280" rx="20" fill="#6b21a8" opacity="0.7"/>
+  <rect x="620" y="380" width="680" height="60" rx="30" fill="#7c3aed" opacity="0.8"/>
+  
+  <!-- Pillows -->
+  <ellipse cx="720" cy="410" rx="60" ry="30" fill="#a855f7" opacity="0.9"/>
+  <ellipse cx="1200" cy="410" rx="60" ry="30" fill="#a855f7" opacity="0.9"/>
+  
+  <!-- Window -->
+  <rect x="1400" y="200" width="400" height="300" fill="#ddd6fe" stroke="#8b5cf6" stroke-width="8"/>
+  <line x1="1600" y1="200" x2="1600" y2="500" stroke="#8b5cf6" stroke-width="4"/>
+  <line x1="1400" y1="350" x2="1800" y2="350" stroke="#8b5cf6" stroke-width="4"/>
+  
+  <!-- Mountain view through window -->
+  <polygon points="1420,480 1500,250 1580,300 1660,220 1740,280 1780,240 1780,480" fill="#3b82f6" opacity="0.6"/>
+  
+  <!-- Furniture -->
+  <rect x="200" y="500" width="200" height="100" rx="10" fill="#6b21a8" opacity="0.6"/>
+  <rect x="1500" y="600" width="150" height="80" rx="10" fill="#6b21a8" opacity="0.6"/>
+  
+  <!-- Decorative elements -->
+  <circle cx="300" cy="300" r="40" fill="#fbbf24" opacity="0.7"/>
+  <circle cx="1600" cy="150" r="30" fill="#fbbf24" opacity="0.7"/>
+  
+  <!-- Text overlay -->
+  <text x="960" y="900" text-anchor="middle" fill="#4c1d95" font-family="serif" font-size="48" font-weight="bold">Luxury Mountain Suite</text>
+</svg>

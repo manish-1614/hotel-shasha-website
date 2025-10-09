@@ -1,0 +1,141 @@
+/* Map Controls Styles */
+
+.mapControls {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin-top: 1rem;
+  box-shadow: var(--shadow-soft);
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.controlsTitle {
+  font-size: 1.1rem;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-mountain-800);
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.markerGroup {
+  margin-bottom: 1.5rem;
+}
+
+.markerGroup:last-child {
+  margin-bottom: 0;
+}
+
+.groupTitle {
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-mountain-700);
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--color-primary-200);
+}
+
+.groupIcon {
+  margin-right: 0.5rem;
+  font-size: 1rem;
+}
+
+.markerButton {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 0.5rem;
+  background: white;
+  border: 1px solid var(--color-primary-200);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+}
+
+.markerButton:hover {
+  border-color: var(--color-primary-400);
+  background: var(--color-primary-50);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-soft);
+}
+
+.markerButtonActive {
+  border-color: var(--color-primary-500);
+  background: var(--color-primary-100);
+  box-shadow: var(--shadow-soft);
+}
+
+.markerName {
+  font-size: 0.85rem;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-mountain-800);
+  flex: 1;
+}
+
+.markerDistance {
+  font-size: 0.75rem;
+  color: var(--color-mountain-500);
+  font-weight: var(--font-weight-normal);
+}
+
+/* Custom scrollbar */
+.mapControls::-webkit-scrollbar {
+  width: 4px;
+}
+
+.mapControls::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+}
+
+.mapControls::-webkit-scrollbar-thumb {
+  background: var(--color-primary-400);
+  border-radius: 2px;
+}
+
+.mapControls::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary-500);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .mapControls {
+    padding: 1rem;
+    max-height: 300px;
+  }
+  
+  .controlsTitle {
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .markerGroup {
+    margin-bottom: 1rem;
+  }
+  
+  .groupTitle {
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.4rem;
+  }
+  
+  .markerButton {
+    padding: 0.6rem;
+    margin-bottom: 0.4rem;
+  }
+  
+  .markerName {
+    font-size: 0.8rem;
+  }
+  
+  .markerDistance {
+    font-size: 0.7rem;
+  }
+}

@@ -1,0 +1,86 @@
+/* Map Legend Styles */
+
+.mapLegend {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  margin-top: 1rem;
+  box-shadow: var(--shadow-soft);
+}
+
+.legendTitle {
+  font-size: 0.9rem;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-mountain-800);
+  margin-bottom: 0.75rem;
+  text-align: center;
+}
+
+.legendItems {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.legendMarker {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+}
+
+.legendIcon {
+  font-size: 0.75rem;
+  filter: brightness(0) invert(1);
+}
+
+.legendLabel {
+  font-size: 0.8rem;
+  color: var(--color-mountain-700);
+  font-weight: var(--font-weight-medium);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .mapLegend {
+    padding: 0.75rem;
+  }
+  
+  .legendTitle {
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .legendItems {
+    gap: 0.4rem;
+  }
+  
+  .legendItem {
+    gap: 0.5rem;
+  }
+  
+  .legendMarker {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+  
+  .legendIcon {
+    font-size: 0.7rem;
+  }
+  
+  .legendLabel {
+    font-size: 0.75rem;
+  }
+}

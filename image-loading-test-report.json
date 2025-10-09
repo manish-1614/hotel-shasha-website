@@ -1,0 +1,125 @@
+{
+  "passed": 11,
+  "failed": 3,
+  "warnings": 5,
+  "details": [
+    {
+      "timestamp": "2025-09-24T19:40:48.591Z",
+      "message": "Found 3 image references in components",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T19:40:48.598Z",
+      "message": "Image exists: /Shasha_logo-without-background.png (48KB)",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T19:40:48.599Z",
+      "message": "Missing image: /images/hero/hero-1.jpg",
+      "type": "error"
+    },
+    {
+      "timestamp": "2025-09-24T19:40:48.600Z",
+      "message": "Missing image: /images/invalid-image.jpg",
+      "type": "error"
+    },
+    {
+      "timestamp": "2025-09-24T19:40:48.600Z",
+      "message": "2 images are missing from public directory",
+      "type": "error"
+    },
+    {
+      "timestamp": "2025-09-24T19:40:48.608Z",
+      "message": "Total images: 1",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T19:40:48.609Z",
+      "message": "Total size: 48KB",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T19:40:48.609Z",
+      "message": "Average size: 48KB",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T19:40:48.610Z",
+      "message": "Large images (>500KB): 0",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T19:40:48.610Z",
+      "message": "No modern image formats (WebP) detected - consider optimization",
+      "type": "warning"
+    },
+    {
+      "timestamp": "2025-09-24T19:40:48.670Z",
+      "message": "Components using Next.js Image: 13",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T19:40:48.672Z",
+      "message": "Components using regular <img>: 0",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T19:40:48.726Z",
+      "message": "Components with image error handling: 20",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T19:40:48.771Z",
+      "message": "Missing alt text in ImageGallery.tsx",
+      "type": "warning"
+    },
+    {
+      "timestamp": "2025-09-24T19:40:48.773Z",
+      "message": "Missing alt text in OptimizedImage.tsx",
+      "type": "warning"
+    },
+    {
+      "timestamp": "2025-09-24T19:40:48.774Z",
+      "message": "Missing alt text in SimpleImage.tsx",
+      "type": "warning"
+    },
+    {
+      "timestamp": "2025-09-24T19:40:48.775Z",
+      "message": "Images with alt text: 12",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T19:40:48.776Z",
+      "message": "Images missing alt text: 3",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-24T19:40:48.776Z",
+      "message": "Some images are missing alt text - important for accessibility",
+      "type": "warning"
+    }
+  ],
+  "imageStats": {
+    "totalImages": 1,
+    "totalSizeKB": 48,
+    "averageSizeKB": 48,
+    "largeImages": 0,
+    "formatDistribution": {
+      "jpg": 0,
+      "jpeg": 0,
+      "png": 1,
+      "svg": 0,
+      "webp": 0,
+      "gif": 0
+    }
+  },
+  "recommendations": [
+    "Use Next.js Image component for automatic optimization",
+    "Convert large images to WebP format when possible",
+    "Add proper alt text for all images",
+    "Implement error handling for failed image loads",
+    "Consider lazy loading for images below the fold",
+    "Optimize images to be under 500KB when possible"
+  ],
+  "timestamp": "2025-09-24T19:40:48.782Z"
+}
