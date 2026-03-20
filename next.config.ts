@@ -1,7 +1,11 @@
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
+  output: 'export',
+  // Change to your repo name if deploying to GitHub Pages without a custom domain
+  basePath: '/hotel-shasha-website',
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
@@ -9,22 +13,14 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  
+  // Optional: Add trailingSlash for GH Pages
+  trailingSlash: true,
 
   async headers() {
-    return [
-      {
-        source: '/(.*)',
-        headers: [
-          { key: 'X-Frame-Options', value: 'DENY' },
-          { key: 'X-Content-Type-Options', value: 'nosniff' },
-          { key: 'Referrer-Policy', value: 'origin-when-cross-origin' },
-          {
-            key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(), geolocation=()',
-          },
-        ],
-      },
-    ]
+    // Note: async headers() are NOT supported in output: 'export'
+    // This is just kept here for future reference or if switching back to SSR
+    return []
   },
 }
 

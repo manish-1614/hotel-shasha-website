@@ -76,5 +76,18 @@ Next.js 16 keeps a lock file at **`.next/dev/lock`**. If a previous `pnpm dev` c
 - [ ] Core Site Architecture
 - [ ] Room Booking Integration
 
+## 🌐 Deployment
+
+This project is configured for **GitHub Pages** using GitHub Actions.
+
+1. **Push Changes**: Every push to the `main` branch will automatically trigger a build and deployment.
+2. **GitHub Settings**:
+   - Go to your repository on GitHub.
+   - Navigate to **Settings > Pages**.
+   - Under **Build and deployment > Source**, select **GitHub Actions**.
+3. **Wait for Build**: Check the **Actions** tab to see the progress of the `Deploy to GitHub Pages` workflow.
+4. **Access Site**: Once complete, your site will be live at:  
+   `https://manish-1614.github.io/hotel-shasha-website/`
+
 ---
 *Nestled in silence, crafted with soul.*
