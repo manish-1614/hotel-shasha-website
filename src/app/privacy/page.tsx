@@ -96,7 +96,7 @@ export default function PrivacyPage() {
                 data at any time. To make a request, email us at{' '}
                 <a href="mailto:stay@shashajibhi.com">stay@shashajibhi.com</a>{' '}
                 or call{' '}
-                <a href="tel:+918210134128">+91 8210134128</a>.
+                <a href="tel:+918899543976">+91 8899543976</a>.
               </p>
 
               <h2>7. Changes to This Policy</h2>
@@ -116,7 +116,7 @@ export default function PrivacyPage() {
                   <a href="mailto:stay@shashajibhi.com">stay@shashajibhi.com</a>
                 </li>
                 <li>
-                  Phone: <a href="tel:+918210134128">+91 8210134128</a>
+                  Phone: <a href="tel:+918899543976">+91 8899543976</a>
                 </li>
                 <li>
                   Address: Shasha, Jibhi, Banjar, Kullu, Himachal Pradesh 175123

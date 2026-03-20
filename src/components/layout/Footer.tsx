@@ -60,13 +60,13 @@ export default function Footer() {
               </li>
               <li>
                 <a
-                  href="https://wa.me/918210134128"
+                  href="https://wa.me/918899543976"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-3 text-sm text-white/60 hover:text-forest-light transition-colors"
                 >
                   <MessageCircle size={16} className="shrink-0" />
-                  +91 8210134128
+                  +91 8899543976
                 </a>
               </li>
               <li>

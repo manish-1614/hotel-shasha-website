@@ -50,6 +50,7 @@ export default function MultiStepForm() {
   const [step, setStep] = useState<FormStep>(1)
   const [direction, setDirection] = useState(1)
   const [formState, setFormState] = useState<FormState>('filling')
+  const [whatsappUrl, setWhatsappUrl] = useState('')
 
   const form = useForm<FullFormData>({
     resolver: zodResolver(fullFormSchema),
@@ -91,20 +92,47 @@ export default function MultiStepForm() {
     if (data.website && data.website.length > 0) return
 
     setFormState('submitting')
-    try {
-      const res = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      })
-      if (res.ok) {
-        setFormState('success')
-      } else {
-        setFormState('error')
-      }
-    } catch {
-      setFormState('error')
-    }
+
+    // Format labels for the message
+    const roomLabel = roomTypeOptions.find((o) => o.value === data.roomType)?.label || data.roomType
+    const mealLabel = mealPlanOptions.find((o) => o.value === data.mealPlan)?.label || data.mealPlan
+    const checkinDate = new Date(data.checkin).toLocaleDateString('en-IN', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+    })
+    const checkoutDate = new Date(data.checkout).toLocaleDateString('en-IN', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+    })
+
+    const message = `*Shasha Jibhi Enquiry* 🏔️
+
+*Guest Details*
+• Name: ${data.name}
+• Email: ${data.email}
+• Phone: +91 ${data.phone}
+• City: ${data.city || 'Not specified'}
+
+*Stay Details*
+• Room: ${roomLabel}
+• Dates: ${checkinDate} to ${checkoutDate}
+• Guests: ${data.guests}
+• Meal Plan: ${mealLabel}
+
+*Message/Requests:*
+${data.requests || 'None'}`
+
+    const url = `https://wa.me/918899543976?text=${encodeURIComponent(message)}`
+    setWhatsappUrl(url)
+
+    // Brief delay to show submission state
+    await new Promise((resolve) => setTimeout(resolve, 800))
+
+    // Open WhatsApp
+    window.open(url, '_blank')
+    setFormState('success')
   }
 
   if (formState === 'success') {
@@ -126,7 +154,7 @@ export default function MultiStepForm() {
         </p>
         <div className="mt-8">
           <a
-            href="https://wa.me/918210134128"
+            href={whatsappUrl || 'https://wa.me/918899543976'}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 rounded-full bg-forest px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-300 hover:bg-forest-dark hover:shadow-md"
@@ -483,10 +511,10 @@ export default function MultiStepForm() {
                   Something went wrong. Please try again or contact us directly
                   at{' '}
                   <a
-                    href="tel:+918210134128"
+                    href="tel:+918899543976"
                     className="font-semibold underline"
                   >
-                    +91 8210134128
+                    +91 8899543976
                   </a>
                   .
                 </div>
