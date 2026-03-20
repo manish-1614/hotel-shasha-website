@@ -20,6 +20,9 @@ Shasha is more than a homestay; it's a "Paused Perfect" experience. Our design l
 
 ## 🚀 Getting Started
 
+> [!IMPORTANT]  
+> This project **requires `pnpm`**. Please do not use `npm` or `yarn` as it will cause dependency and lockfile conflicts.
+
 1. **Clone the repository:**
    ```bash
    git clone https://github.com/manish-1614/hotel-shasha-website.git
