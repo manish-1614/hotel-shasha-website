@@ -8,7 +8,9 @@
     "pnpm": ">=10.0.0"
   },
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --hostname 127.0.0.1 --port 3000",
+    "dev:network": "next dev --hostname 0.0.0.0 --port 3000",
+    "dev:force": "node ./scripts/clear-dev-lock.mjs && next dev --hostname 127.0.0.1 --port 3000",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"

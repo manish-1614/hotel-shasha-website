@@ -1,6 +1,4 @@
 import type { Metadata } from 'next'
-import Navbar from '@/components/layout/Navbar'
-import Footer from '@/components/layout/Footer'
 import AboutHero from '@/components/about/AboutHero'
 import OurPhilosophy from '@/components/about/OurPhilosophy'
 import BonfireEthos from '@/components/about/BonfireEthos'
@@ -14,13 +12,9 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <>
-      <Navbar />
-      <main>
-        <AboutHero />
-        <OurPhilosophy />
-        <BonfireEthos />
-      </main>
-      <Footer />
+      <AboutHero />
+      <OurPhilosophy />
+      <BonfireEthos />
     </>
   )
 }

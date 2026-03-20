@@ -12,7 +12,7 @@ Shasha is more than a homestay; it's a "Paused Perfect" experience. Our design l
 - **Midnight:** Sleek, modern accents.
 
 ## 🛠️ Tech Stack
-- **Framework:** Next.js 15 (App Router)
+- **Framework:** Next.js 16 (App Router, Turbopack dev)
 - **Styling:** Tailwind CSS 4
 - **Animations:** Framer Motion
 - **Icons:** Lucide React
@@ -38,7 +38,36 @@ Shasha is more than a homestay; it's a "Paused Perfect" experience. Our design l
    pnpm dev
    ```
 
-4. **Visit:** `http://localhost:3000`
+   The dev server binds to **`127.0.0.1:3000`** (explicit IPv4 localhost), which avoids some Windows/`localhost` resolution issues.
+
+4. **Visit:** `http://127.0.0.1:3000` or `http://localhost:3000`
+
+### Dev server won’t start? (port / “already running”)
+
+Next.js 16 keeps a lock file at **`.next/dev/lock`**. If a previous `pnpm dev` crashed or a terminal was closed without stopping the server, you may see:
+
+- `Port 3000 is in use…`
+- `Another next dev server is already running`
+
+**Fix (pick one):**
+
+1. **Stop the old process** — In PowerShell, find the PID on port 3000 and stop it, or use Task Manager to end the stray `node` process for this project.
+
+2. **Clear a stale lock and start again:**
+   ```bash
+   pnpm dev:force
+   ```
+
+3. **Use another port** (if something else needs 3000):
+   ```bash
+   pnpm dev -- --port 3001
+   ```
+
+4. **Listen on all interfaces** (phone / LAN testing):
+   ```bash
+   pnpm dev:network
+   ```
+   Then open `http://<your-LAN-IP>:3000` (Windows Firewall may prompt you to allow Node).
 
 ## 📈 Project Status
 - [x] Initial Setup & Design Tokens

@@ -4,33 +4,7 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Star, ChevronLeft, ChevronRight } from 'lucide-react'
 import SectionHeading from '@/components/ui/SectionHeading'
-
-const testimonials = [
-  {
-    name: 'Anika Mehra',
-    location: 'Delhi',
-    rating: 5,
-    quote:
-      'The skylight duplex is hands down the most magical room I have ever stayed in. Waking up to the stars, then to the sun — pure magic. And the food! The brothers cook like Michelin-star chefs who just happen to live in the mountains.',
-    stayType: 'Duplex Cottage',
-  },
-  {
-    name: 'Rajat Khanna',
-    location: 'Mumbai',
-    rating: 5,
-    quote:
-      'I came for 2 nights, stayed for 5. Shasha is not a homestay — it is an experience. The bonfire conversations, the treks, the endless chai. I left with a full heart and a promise to return.',
-    stayType: 'Private Room',
-  },
-  {
-    name: 'Sarah & Tom',
-    location: 'London',
-    rating: 5,
-    quote:
-      'We have backpacked across 30 countries, and Shasha is in our top 3 stays ever. The dorm has an actual library in the attic! And the hosts — honestly, they became our friends. Already planning our next trip.',
-    stayType: 'Dorm',
-  },
-]
+import { testimonials } from '@/data/testimonials'
 
 export default function TestimonialsSection() {
   const [current, setCurrent] = useState(0)
@@ -72,7 +46,6 @@ export default function TestimonialsSection() {
               transition={{ duration: 0.4 }}
               className="text-center"
             >
-              {/* Stars */}
               <div className="flex items-center justify-center gap-1 mb-6">
                 {Array.from({ length: testimonials[current].rating }).map(
                   (_, i) => (
@@ -85,12 +58,10 @@ export default function TestimonialsSection() {
                 )}
               </div>
 
-              {/* Quote */}
               <blockquote className="text-lg sm:text-xl text-white/90 leading-relaxed font-light italic max-w-3xl mx-auto">
                 &ldquo;{testimonials[current].quote}&rdquo;
               </blockquote>
 
-              {/* Attribution */}
               <div className="mt-8">
                 <p className="font-editorial text-base font-semibold text-white">
                   {testimonials[current].name}
@@ -103,7 +74,6 @@ export default function TestimonialsSection() {
             </motion.div>
           </AnimatePresence>
 
-          {/* Navigation */}
           <div className="flex items-center justify-center gap-4 mt-8">
             <button
               onClick={prev}
