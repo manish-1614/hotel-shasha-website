@@ -1,6 +1,8 @@
 import type { MetadataRoute } from 'next'
 import { rooms } from '@/data/rooms'
 
+export const dynamic = 'force-static'
+
 const baseUrl = 'https://www.shashajibhi.com'
 
 export default function sitemap(): MetadataRoute.Sitemap {
