@@ -1,44 +1,39 @@
-import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
-import './globals.css';
-import '@/styles/globals.css';
-import ErrorBoundary from '@/components/ui/ErrorBoundary/ErrorBoundary';
-
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-});
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-});
+import type { Metadata } from 'next'
+import { fontVariables } from '@/lib/fonts'
+import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Hotel Shasha - Boutique Hotel in Jibhi, Himachal Pradesh',
-  description:
-    'Experience serene mountain hospitality at Hotel Shasha in Jibhi, Himachal Pradesh. Luxury accommodation with stunning Himalayan views.',
-  icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon.ico',
-    apple: '/favicon.ico',
+  title: {
+    default: 'Shasha Jibhi — Paused Perfect',
+    template: '%s | Shasha Jibhi',
   },
-};
+  description:
+    'A boutique homestay in Jibhi, Himachal Pradesh — where time slows down. Skylight duplex cottage, global cuisine, mountain dorm, and valley-view private rooms nestled in cedar forests.',
+  keywords: [
+    'Jibhi homestay',
+    'Himachal Pradesh',
+    'boutique stay',
+    'Shasha',
+    'mountain retreat',
+    'duplex cottage',
+    'Tirthan Valley',
+  ],
+  authors: [{ name: 'Shasha Jibhi' }],
+  openGraph: {
+    type: 'website',
+    locale: 'en_IN',
+    siteName: 'Shasha Jibhi',
+  },
+}
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <ErrorBoundary showDetails={false}>
-          {children}
-        </ErrorBoundary>
-      </body>
+    <html lang="en" className={fontVariables}>
+      <body>{children}</body>
     </html>
-  );
+  )
 }

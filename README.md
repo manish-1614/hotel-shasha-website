@@ -1,85 +1,48 @@
-# Hotel Shasha Website
+# Hotel Shasha — Jibhi, Himachal Pradesh
 
-A modern, responsive website for Hotel Shasha, a boutique hotel located in Jibhi, Himachal Pradesh. Built with Next.js, TypeScript, and Framer Motion for smooth animations and an engaging user experience.
+> Something beautiful is taking root.
 
-## Features
+This is the official repository for the **Hotel Shasha** website. We are currently in the **Planning & Architecture** phase, crafting a boutique luxury homestay experience nestled in the cedar forests of Jibhi.
 
-- **Modern Design**: Clean, elegant design inspired by mountain hospitality
-- **Responsive Layout**: Optimized for desktop, tablet, and mobile devices
-- **Smooth Animations**: Powered by Framer Motion for engaging interactions
-- **Performance Optimized**: Built with Next.js for fast loading and SEO
-- **TypeScript**: Full type safety throughout the application
-- **Accessibility**: WCAG compliant with proper ARIA labels and keyboard navigation
+## 🌲 The Vision
+Shasha is more than a homestay; it's a "Paused Perfect" experience. Our design language focuses on:
+- **Forest:** Deep greens and natural textures.
+- **Warm Wood:** Earthy tones and mountain craftsmanship.
+- **Parchment:** Minimalist, clean backgrounds.
+- **Midnight:** Sleek, modern accents.
 
-## Tech Stack
+## 🛠️ Tech Stack
+- **Framework:** Next.js 15 (App Router)
+- **Styling:** Tailwind CSS 4
+- **Animations:** Framer Motion
+- **Icons:** Lucide React
+- **Fonts:** Cormorant Garamond, Playfair Display, DM Sans, Caveat
 
-- **Framework**: Next.js 15 with App Router
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS
-- **Animations**: Framer Motion
-- **Icons**: Lucide React
-- **Development**: ESLint, Prettier
+## 🚀 Getting Started
 
-## Getting Started
-
-### Prerequisites
-
-- Node.js 18+
-- npm or yarn
-
-### Installation
-
-1. Clone the repository
-2. Install dependencies:
-
+1. **Clone the repository:**
    ```bash
-   npm install
+   git clone https://github.com/manish-1614/hotel-shasha-website.git
    ```
 
-3. Run the development server:
-
+2. **Install dependencies:**
    ```bash
-   npm run dev
+   pnpm install
    ```
 
-4. Open [http://localhost:3000](http://localhost:3000) in your browser
+3. **Run the development server:**
+   ```bash
+   pnpm dev
+   ```
 
-## Available Scripts
+4. **Visit:** `http://localhost:3000`
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run start` - Start production server
-- `npm run lint` - Run ESLint
-- `npm run lint:fix` - Fix ESLint issues
-- `npm run format` - Format code with Prettier
-- `npm run format:check` - Check code formatting
-- `npm run type-check` - Run TypeScript type checking
-- `npm run clean` - Clean build artifacts
+## 📈 Project Status
+- [x] Initial Setup & Design Tokens
+- [x] "Project Started" Landing Page
+- [ ] Planning Phase (Refining Content & UX)
+- [ ] Core Site Architecture
+- [ ] Room Booking Integration
 
-## Project Structure
-
-```
-src/
-├── app/                 # Next.js app router pages
-├── components/          # React components
-│   ├── common/         # Shared components (Header, Footer, etc.)
-│   ├── sections/       # Page sections (Hero, Rooms, etc.)
-│   └── ui/             # UI components (Button, Card, etc.)
-├── styles/             # Global styles and CSS modules
-├── types/              # TypeScript type definitions
-├── utils/              # Utility functions
-├── hooks/              # Custom React hooks
-└── assets/             # Static assets (images, etc.)
-```
-
-## Development Guidelines
-
-- Follow TypeScript best practices
-- Use Tailwind CSS for styling
-- Implement responsive design for all components
-- Add proper accessibility attributes
-- Write clean, maintainable code with proper documentation
-
-## License
-
-This project is proprietary and confidential.
+---
+*Nestled in silence, crafted with soul.*

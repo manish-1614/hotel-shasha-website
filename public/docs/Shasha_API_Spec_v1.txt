@@ -1,0 +1,281 @@
+SHASHA: PAUSED PERFECT
+Jibhi, Himachal Pradesh
+  API SPECIFICATION  ·  API v1.0  
+
+API Specification
+All Endpoints · Request &amp; Response Schemas · Error Contracts
+
+Version 1.0  ·  March 2026
+Author: Manish — Senior Full-Stack Architect
+Repository: github.com/manish-1614/hotel-shasha-website
+
+1. Overview &amp; Conventions
+This document specifies all HTTP API endpoints exposed by the Shasha Jibhi web platform. In Phase 1, the platform exposes one primary API endpoint (/api/contact). This document also specifies the internal API contracts for server actions and future Phase 2 endpoints, so that frontend and backend work can proceed in parallel against a stable contract.
+
+1.1 Base URL
+Production:  https://shashajibhi.comPreview:     https://{branch-name}-shasha.vercel.appDevelopment: http://localhost:3000
+
+1.2 Global Conventions
+Convention
+Specification
+Protocol
+HTTPS only. HTTP requests are redirected (301) to HTTPS.
+Content-Type
+All request and response bodies are application/json unless noted.
+Authentication
+Phase 1: None (public endpoints). Phase 2 admin routes: Bearer token (JWT) via Authorization header.
+Rate Limiting
+5 requests per IP per hour on all /api/* routes. Headers: X-RateLimit-Limit, X-RateLimit-Remaining, Retry-After.
+Timestamps
+All timestamps in ISO 8601 format: 2026-03-19T12:00:00.000Z (UTC).
+Dates (user input)
+Date-only fields (checkin, checkout) in YYYY-MM-DD format.
+Currency
+All monetary values in INR (Indian Rupees) as integers (paise not used; whole rupees only).
+Error envelope
+All errors return a consistent JSON envelope — see Section 3.
+CORS
+Not applicable — all API routes are same-origin. No CORS headers set.
+Idempotency
+POST /api/contact is effectively idempotent: duplicate submissions (same email + checkin within 24h) are silently accepted (200) but not re-processed.
+
+1.3 Standard Error Envelope
+All API error responses use this JSON structure:
+
+{  &quot;error&quot;: {    &quot;code&quot;:    &quot;VALIDATION_ERROR&quot;,      // Machine-readable code (see Section 3)    &quot;message&quot;: &quot;Human-readable message&quot;,    &quot;details&quot;: { }                       // Optional: field-level errors (Zod)  }}
+
+1.4 Error Code Reference
+HTTP Status
+Error Code
+When Triggered
+400
+VALIDATION_ERROR
+Request body fails Zod schema validation. details contains field-level errors.
+400
+MISSING_BODY
+Request body is null, empty, or not valid JSON.
+403
+BOT_DETECTED
+Cloudflare Turnstile verification failed. Submission rejected as automated.
+403
+FORBIDDEN
+General access denied (reserved for Phase 2 auth-protected routes).
+409
+DUPLICATE_SUBMISSION
+Same email + check-in date submitted within 24 hours. (Note: currently silently returns 200 — see dedup strategy.)
+429
+RATE_LIMIT_EXCEEDED
+IP has exceeded 5 requests/hour on this endpoint.
+500
+INTERNAL_ERROR
+Unhandled server-side error. email_failed variant when Resend call fails.
+503
+SERVICE_UNAVAILABLE
+Upstream dependency (Resend, Cloudflare) is unreachable.
+2. Phase 1 Endpoints
+2.1  POST /api/contact
+  POST    /api/contact   —  Submit a guest stay enquiry
+
+Processes a completed multi-step enquiry form submission. Validates input, screens for bots, deduplicates, and dispatches notification emails to both the host and the guest.
+
+Request Headers
+Header
+Required
+Value
+Content-Type
+Yes
+application/json
+CF-Turnstile-Token
+No (in header)
+Passed inside request body as turnstileToken field
+
+Request Body Schema
+{  // ── Step 1: Personal Details ─────────────────────────────────  &quot;name&quot;:           string,   // Required. 2–80 chars. Alpha + spaces.  &quot;email&quot;:          string,   // Required. Valid email format.  &quot;phone&quot;:          string,   // Required. 10-digit Indian mobile (6–9 prefix).  &quot;city&quot;:           string,   // Optional. Max 60 chars.  &quot;website&quot;:        string,   // HONEYPOT. Must be empty string or absent.  // ── Step 2: Stay Preferences ─────────────────────────────────  &quot;checkin&quot;:        string,   // Required. YYYY-MM-DD. Must be &gt;= tomorrow.  &quot;checkout&quot;:       string,   // Required. YYYY-MM-DD. Must be &gt; checkin.  &quot;roomType&quot;:       string,   // Required. Enum: see Room Type Enum below.  &quot;guests&quot;:         number,   // Required. Integer 1–8.  &quot;mealPlan&quot;:       string,   // Required. Enum: &quot;room-only&quot;|&quot;cp-plan&quot;|&quot;full-board&quot;.  &quot;requests&quot;:       string,   // Optional. Free text, max 400 chars.  &quot;source&quot;:         string,   // Optional. Enum: &quot;instagram&quot;|&quot;google&quot;|&quot;friend&quot;|&quot;blog&quot;|&quot;ota&quot;|&quot;other&quot;.  // ── Step 3: Bot Protection ───────────────────────────────────  &quot;turnstileToken&quot;: string,   // Required. Cloudflare Turnstile response token.}// Room Type Enum values:// &quot;duplex-triple&quot;  — Duplex Cottage, triple sharing// &quot;duplex-quad&quot;    — Duplex Cottage, quad sharing// &quot;private&quot;        — Private Room, double sharing// &quot;dorm&quot;           — Unisex 6-bed Dormitory (guests field = bed count)
+
+Request Body — Full Example
+{  &quot;name&quot;:           &quot;Priya Sharma&quot;,  &quot;email&quot;:          &quot;priya.sharma@example.com&quot;,  &quot;phone&quot;:          &quot;9876543210&quot;,  &quot;city&quot;:           &quot;Mumbai&quot;,  &quot;website&quot;:        &quot;&quot;,  &quot;checkin&quot;:        &quot;2026-05-10&quot;,  &quot;checkout&quot;:       &quot;2026-05-14&quot;,  &quot;roomType&quot;:       &quot;duplex-triple&quot;,  &quot;guests&quot;:         3,  &quot;mealPlan&quot;:       &quot;cp-plan&quot;,  &quot;requests&quot;:       &quot;Vegetarian food only. Celebrating our anniversary.&quot;,  &quot;source&quot;:         &quot;instagram&quot;,  &quot;turnstileToken&quot;: &quot;0.abc123xyz...&quot;}
+
+Success Response — 200 OK
+HTTP/1.1 200 OKContent-Type: application/json{ &quot;ok&quot;: true }
+ℹ  A 200 response means the enquiry was received and processed. It does NOT guarantee email delivery — email dispatch is best-effort. In Phase 2, 200 guarantees database persistence.
+
+Deduplication Response — 200 OK (silent)
+// When same email + checkin date submitted within 24h:HTTP/1.1 200 OKContent-Type: application/json{ &quot;ok&quot;: true }// Note: identical to success. The client cannot distinguish dedup from success.// This is intentional — discourages submission retry loops.
+
+Error Responses
+// 400 Validation ErrorHTTP/1.1 400 Bad Request{  &quot;error&quot;: {    &quot;code&quot;: &quot;VALIDATION_ERROR&quot;,    &quot;message&quot;: &quot;Request validation failed&quot;,    &quot;details&quot;: {      &quot;fieldErrors&quot;: {        &quot;email&quot;:    [&quot;Invalid email address&quot;],        &quot;checkin&quot;:  [&quot;Check-in date must be in the future&quot;],        &quot;roomType&quot;: [&quot;Invalid enum value&quot;]      },      &quot;formErrors&quot;: []    }  }}// 403 Bot DetectedHTTP/1.1 403 Forbidden{  &quot;error&quot;: { &quot;code&quot;: &quot;BOT_DETECTED&quot;, &quot;message&quot;: &quot;Submission rejected&quot; }}// 429 Rate LimitedHTTP/1.1 429 Too Many RequestsRetry-After: 3600X-RateLimit-Limit: 5X-RateLimit-Remaining: 0{  &quot;error&quot;: { &quot;code&quot;: &quot;RATE_LIMIT_EXCEEDED&quot;, &quot;message&quot;: &quot;Too many requests. Please try again in 1 hour.&quot; }}// 500 Internal ErrorHTTP/1.1 500 Internal Server Error{  &quot;error&quot;: { &quot;code&quot;: &quot;INTERNAL_ERROR&quot;, &quot;message&quot;: &quot;An unexpected error occurred. Please try again.&quot; }}
+
+Processing Pipeline (in order)
+Step
+Action
+On Failure
+Returns
+1
+Edge Middleware: rate limit check (Upstash Redis)
+Stop
+429
+2
+Edge Middleware: User-Agent bot pre-screen
+Stop
+403
+3
+Parse request body to JSON
+Stop
+400 MISSING_BODY
+4
+Zod schema validation (fullFormSchema)
+Stop
+400 VALIDATION_ERROR
+5
+Honeypot check: website field must be empty
+Stop (silent)
+200 {ok:true}
+6
+Cloudflare Turnstile token verification (HTTPS call)
+Stop
+403 BOT_DETECTED
+7
+Redis deduplication check: SHA-256(email+checkin)
+Stop (silent)
+200 {ok:true}
+8
+Store dedup key in Redis with 24h TTL
+Continue (non-blocking)
+—
+9
+Send host notification email via Resend
+Log error; continue
+—
+10
+Send guest confirmation email via Resend
+Log error; continue
+—
+11
+(Phase 2) Write enquiry record to NeonDB
+Log error; return 500
+500
+12
+Return success
+—
+200 {ok:true}
+
+2.2  GET /api/health
+  GET    /api/health   —  Platform health check
+
+Simple health check endpoint for uptime monitoring tools (UptimeRobot, Vercel Health Checks). Does not verify external service connectivity in Phase 1.
+
+// Response: 200 OK{  &quot;status&quot;:    &quot;ok&quot;,  &quot;version&quot;:   &quot;1.0.0&quot;,  &quot;timestamp&quot;: &quot;2026-03-19T12:00:00.000Z&quot;,  &quot;env&quot;:       &quot;production&quot;}
+3. Phase 2 Endpoints — Contract Specification
+These endpoints do not exist in Phase 1 but are specified here so frontend development can proceed against a stable mock contract. All Phase 2 routes under /api/admin/* require authentication.
+
+✓  Phase 2 admin routes use Bearer token authentication: Authorization: Bearer {jwt_token}. JWT issued by a secure /api/admin/auth/login endpoint (credentials: email + password stored as hashed secrets in Vercel Env Vars).
+
+3.1  GET /api/admin/enquiries
+  GET    /api/admin/enquiries   —  List all guest enquiries (paginated)
+
+Query Parameters
+Parameter
+Type
+Default
+Description
+page
+integer
+1
+Page number (1-indexed)
+limit
+integer
+20
+Records per page. Max 100.
+status
+string
+all
+Filter: all | new | contacted | confirmed | cancelled
+roomType
+string
+all
+Filter by room type enum value
+from
+date
+—
+Filter checkin &gt;= YYYY-MM-DD
+to
+date
+—
+Filter checkin &lt;= YYYY-MM-DD
+q
+string
+—
+Full-text search across name, email, city
+
+// Success: 200 OK{  &quot;data&quot;: [    {      &quot;id&quot;:        &quot;enq_01HX8ZQPW3K4M5N6P7R8S9T0&quot;,      &quot;name&quot;:      &quot;Priya Sharma&quot;,      &quot;email&quot;:     &quot;priya@example.com&quot;,      &quot;phone&quot;:     &quot;9876543210&quot;,      &quot;city&quot;:      &quot;Mumbai&quot;,      &quot;roomType&quot;:  &quot;duplex-triple&quot;,      &quot;checkin&quot;:   &quot;2026-05-10&quot;,      &quot;checkout&quot;:  &quot;2026-05-14&quot;,      &quot;nights&quot;:    4,      &quot;guests&quot;:    3,      &quot;mealPlan&quot;:  &quot;cp-plan&quot;,      &quot;requests&quot;:  &quot;Vegetarian food only.&quot;,      &quot;source&quot;:    &quot;instagram&quot;,      &quot;status&quot;:    &quot;new&quot;,      &quot;estimatedRevenue&quot;: 16000,      &quot;createdAt&quot;: &quot;2026-03-19T08:30:00.000Z&quot;    }  ],  &quot;pagination&quot;: {    &quot;page&quot;:       1,    &quot;limit&quot;:      20,    &quot;total&quot;:      47,    &quot;totalPages&quot;: 3  }}
+
+3.2  PATCH /api/admin/enquiries/:id
+  PATCH    /api/admin/enquiries/:id   —  Update enquiry status
+
+// Request body{  &quot;status&quot;: &quot;contacted&quot; | &quot;confirmed&quot; | &quot;cancelled&quot;  }// Success: 200 OK{  &quot;id&quot;: &quot;enq_01HX...&quot;, &quot;status&quot;: &quot;contacted&quot;, &quot;updatedAt&quot;: &quot;2026-03-19T09:00:00.000Z&quot;  }// 404 Not Found{  &quot;error&quot;: { &quot;code&quot;: &quot;NOT_FOUND&quot;, &quot;message&quot;: &quot;Enquiry not found&quot; }  }
+
+3.3  GET /api/admin/rates
+  GET    /api/admin/rates   —  Get current rate configuration
+
+// Success: 200 OK{  &quot;data&quot;: [    {      &quot;id&quot;:          &quot;rate_001&quot;,      &quot;roomType&quot;:    &quot;duplex-triple&quot;,      &quot;season&quot;:      &quot;standard&quot;,      &quot;priceRoomOnly&quot;: 4800,      &quot;priceCpPerPerson&quot;: 1800,      &quot;validFrom&quot;:   &quot;2026-01-01&quot;,      &quot;validTo&quot;:     &quot;2026-12-31&quot;    }    // ... more rate configs  ]}
+
+3.4  PUT /api/admin/rates/:id
+  PUT    /api/admin/rates/:id   —  Update a rate configuration
+
+// Request body (all fields optional — partial update){  &quot;priceRoomOnly&quot;:     5200,  &quot;priceCpPerPerson&quot;:  2000,  &quot;validFrom&quot;:         &quot;2026-10-01&quot;,  &quot;validTo&quot;:           &quot;2026-12-31&quot;}// Success: 200 OK — returns updated rate object
+
+3.5  POST /api/admin/auth/login
+  POST    /api/admin/auth/login   —  Admin authentication (Phase 2)
+
+// Request body{  &quot;email&quot;: &quot;admin@shashajibhi.com&quot;, &quot;password&quot;: &quot;...&quot; }// Success: 200 OK{  &quot;token&quot;:     &quot;eyJhbGciOiJIUzI1NiJ9...&quot;,  // JWT, expires in 8h  &quot;expiresAt&quot;: &quot;2026-03-19T20:00:00.000Z&quot;}// 401 Unauthorized{  &quot;error&quot;: { &quot;code&quot;: &quot;INVALID_CREDENTIALS&quot;, &quot;message&quot;: &quot;Invalid email or password&quot; }  }
+4. Email Dispatch Contracts
+Two transactional emails are sent on every successful enquiry submission. These are not HTTP APIs but are documented here as they form part of the platform&apos;s integration contract.
+
+4.1 Host Notification Email
+Field
+Value
+From
+Shasha Jibhi &lt;noreply@shashajibhi.com&gt;
+To
+stay@shashajibhi.com (configurable via RESEND_HOST_EMAIL env var)
+Reply-To
+Guest email address (enables direct reply from email client)
+Subject
+New Enquiry: {name} · {roomType} · {checkin} → {checkout}
+Template
+src/emails/HostNotification.tsx (react-email)
+Trigger
+Successful POST /api/contact after dedup check
+Content
+Guest full details · Stay summary table · Estimated revenue · Click-to-call phone link · Referral source
+
+4.2 Guest Confirmation Email
+Field
+Value
+From
+Shasha Jibhi &lt;noreply@shashajibhi.com&gt;
+To
+Guest email address from form submission
+Reply-To
+stay@shashajibhi.com
+Subject
+We received your enquiry, {firstName}! — Shasha Jibhi
+Template
+src/emails/GuestConfirmation.tsx (react-email)
+Trigger
+Simultaneous with host notification (Promise.all)
+Content
+Stay summary · Host contact numbers (+91 8899543976 · +91 9534139998) · Instagram @shasha_jibhi · WhatsApp deep-link · &apos;Explore Jibhi&apos; content block
+5. API Testing Guide
+5.1 REST Client File — tests/api/contact.http
+VS Code REST Client (.http file) for testing the API without Postman. Install the &apos;REST Client&apos; extension (humao.rest-client).
+
+### POST /api/contact — Happy PathPOST http://localhost:3000/api/contactContent-Type: application/json{  &quot;name&quot;: &quot;Test User&quot;,  &quot;email&quot;: &quot;test@example.com&quot;,  &quot;phone&quot;: &quot;9876543210&quot;,  &quot;city&quot;: &quot;Delhi&quot;,  &quot;website&quot;: &quot;&quot;,  &quot;checkin&quot;: &quot;2026-06-01&quot;,  &quot;checkout&quot;: &quot;2026-06-05&quot;,  &quot;roomType&quot;: &quot;duplex-triple&quot;,  &quot;guests&quot;: 3,  &quot;mealPlan&quot;: &quot;cp-plan&quot;,  &quot;requests&quot;: &quot;Test enquiry&quot;,  &quot;source&quot;: &quot;google&quot;,  &quot;turnstileToken&quot;: &quot;XXXX.DUMMY.TOKEN.XXXX&quot;}### POST /api/contact — Validation Error (missing phone)POST http://localhost:3000/api/contactContent-Type: application/json{  &quot;name&quot;: &quot;Test User&quot;,  &quot;email&quot;: &quot;not-an-email&quot;,  &quot;checkin&quot;: &quot;2020-01-01&quot;}### GET /api/healthGET http://localhost:3000/api/health
+
+5.2 Mocking Turnstile in Development
+Cloudflare Turnstile provides a set of always-pass and always-fail test keys for local development. Set these in .env.local:
+
+# .env.local — Turnstile test keys (safe to use locally)NEXT_PUBLIC_TURNSTILE_SITE_KEY=1x00000000000000000000AA   # Always passesTURNSTILE_SECRET_KEY=1x0000000000000000000000000000000AA  # Always passes server-side# To test failure path:TURNSTILE_SECRET_KEY=2x0000000000000000000000000000000AA  # Always fails
+
+End of API Specification
+Shasha: Paused Perfect  ·  API Spec v1.0  ·  March 2026

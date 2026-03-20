@@ -1,0 +1,754 @@
+SHASHA: PAUSED PERFECT
+Jibhi, Himachal Pradesh
+  SYSTEM ARCHITECTURE ADDENDUM  
+
+Booking · OTA Sync · CMS · Analytics · Monitoring &amp; Logging
+
+Version 1.0  ·  March 2026  ·  Addendum to TAD v1.0
+Author: Manish — Senior Full-Stack Architect
+Repo: github.com/manish-1614/hotel-shasha-website
+
+Executive Overview
+This addendum extends the Shasha TAD v1.0 with five critical architecture domains that elevate the platform from a static marketing site into a fully operational hospitality product. Each section delivers a complete architecture decision, technology selection rationale, data flow design, and phased implementation plan.
+
+⚠️  Current State:  TAD v1.0 covers the lead-capture website (Phase 1). This addendum architects Phase 2 and beyond — real bookings, live availability, content management, conversion analytics, and production-grade observability.
+
+Section
+Domain
+Phase
+Priority
+1
+Booking System Design
+Phase 2
+Critical
+2
+OTA Synchronisation Strategy
+Phase 2
+Critical
+3
+CMS Strategy
+Phase 2–3
+High
+4
+Analytics Architecture
+Phase 1+
+High
+5
+Monitoring &amp; Logging
+Phase 1+
+High
+
+ℹ️  Sections 4 &amp; 5:  Analytics and Monitoring should be implemented immediately — even before Phase 2 — as they provide the data needed to validate the booking flow design and catch production issues from day one.
+
+  📅  SECTION 1: BOOKING SYSTEM DESIGN  
+
+1. Booking System Design
+The current platform collects enquiry leads via the contact form. Phase 2 transforms this into a real-time booking engine: guests can check availability, get an instant price confirmation, pay a deposit, and receive an automated booking confirmation — without any manual intervention from the Shasha team.
+
+1.1 Why This Matters
+Current State (Phase 1)
+Target State (Phase 2)
+Guest submits enquiry form
+Guest checks live availability calendar
+Host manually replies within hours
+Instant availability confirmation
+Price discussed over WhatsApp
+Transparent pricing + instant estimate
+Payment via UPI/cash on arrival
+Online deposit (20–30%) via Razorpay
+Booking confirmed via SMS/WhatsApp
+Automated email + WhatsApp confirmation
+Risk of double-booking from OTAs
+Centralised availability — no double-booking
+
+1.2 Full System Architecture
+┌─────────────────────────────────────────────────────────────┐│                     GUEST BROWSER                          ││  Availability Calendar → Room Selection → Payment Form     │└────────────────────────┬────────────────────────────────────┘                         │  HTTPS                         ▼┌─────────────────────────────────────────────────────────────┐│              NEXT.JS APP (Vercel Edge)                      ││                                                             ││  /book          → Booking wizard (3-step)                   ││  /api/availability → GET blocked dates from DB              ││  /api/book       → POST create pending booking              ││  /api/payment/create → POST create Razorpay order          ││  /api/payment/verify → POST verify signature + confirm      ││  /api/webhooks/razorpay → Handle async payment events       │└────────────────────────┬────────────────────────────────────┘                         │          ┌──────────────┼──────────────┐          ▼              ▼               ▼   ┌─────────────┐ ┌──────────┐  ┌──────────────┐   │  NeonDB     │ │ Razorpay │  │  Resend      │   │ (PostgreSQL)│ │ Payment  │  │  Email       │   │             │ │ Gateway  │  │  + WhatsApp  │   │ bookings    │ └──────────┘  └──────────────┘   │ availability│   │ rooms       │   └─────────────┘
+
+1.3 Booking Workflow — Step by Step
+
+Step 1: Availability Check
+Guest Action
+Selects check-in / check-out dates on the availability calendar widget.
+Frontend
+Calls GET /api/availability?checkin=YYYY-MM-DD&amp;checkout=YYYY-MM-DD&amp;room=duplex-triple
+API Route
+Queries NeonDB blocked_dates + bookings tables. Returns: { available: true|false, price: number, nights: number }
+UI Response
+Calendar shows unavailable dates in red. Available dates highlighted in forest green. Price estimate shown instantly.
+
+Step 2: Booking Creation (Pending)
+Guest Action
+Confirms room, dates, guests, meal plan. Clicks &apos;Book Now&apos;.
+API: POST /api/book
+Validates inputs via Zod. Checks availability again (double-check race condition guard). Creates booking row with status=&apos;pending&apos;. Locks dates in availability table for 15 minutes (TTL via Upstash KV).
+Response
+Returns { bookingId, orderId, totalAmount, depositAmount, expiresAt }
+
+Step 3: Payment
+Guest Action
+Enters payment details in Razorpay checkout modal (SDK loaded client-side).
+API: POST /api/payment/create
+Creates Razorpay order via server-side SDK call. Amount = depositAmount (20–30% of total). Returns razorpay_order_id.
+Razorpay SDK
+Opens payment modal. Guest completes payment (UPI / card / net banking / wallet).
+API: POST /api/payment/verify
+Receives razorpay_payment_id + razorpay_signature. Verifies HMAC-SHA256 signature server-side. Updates booking status to &apos;confirmed&apos;. Releases availability lock. Writes confirmed dates to blocked_dates.
+Notifications
+Sends guest confirmation email + WhatsApp message. Sends host notification with booking summary.
+
+Step 4: Webhook Handling (Async)
+Razorpay Webhook
+POST /api/webhooks/razorpay — handles: payment.captured, payment.failed, refund.created, order.paid
+Signature verify
+All webhooks verified via X-Razorpay-Signature header before processing.
+payment.failed
+Booking status → &apos;payment_failed&apos;. Availability lock released. Guest notified.
+refund.created
+Booking status → &apos;cancelled&apos;. Dates unblocked. Refund confirmation sent.
+
+1.4 Database Schema — Booking Tables
+-- NeonDB DDL-- bookings tableCREATE TABLE bookings (  id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),  booking_ref   TEXT UNIQUE NOT NULL,  -- e.g. SHA-2025-0001  guest_name    TEXT NOT NULL,  guest_email   TEXT NOT NULL,  guest_phone   TEXT NOT NULL,  room_type     TEXT NOT NULL,         -- &apos;duplex-triple&apos; | &apos;duplex-quad&apos; | &apos;private&apos; | &apos;dorm&apos;  checkin       DATE NOT NULL,  checkout      DATE NOT NULL,  nights        INT GENERATED ALWAYS AS (checkout - checkin) STORED,  guests        INT NOT NULL,  meal_plan     TEXT NOT NULL,  total_amount  NUMERIC(10,2) NOT NULL,  deposit_paid  NUMERIC(10,2),  status        TEXT NOT NULL DEFAULT &apos;pending&apos;,                -- pending | confirmed | cancelled | completed | no_show  source        TEXT DEFAULT &apos;direct&apos;, -- direct | airbnb | booking_com | hostelworld  razorpay_order_id   TEXT,  razorpay_payment_id TEXT,  notes         TEXT,  created_at    TIMESTAMPTZ DEFAULT now(),  updated_at    TIMESTAMPTZ DEFAULT now());-- blocked_dates table (OTA bookings + manual blocks)CREATE TABLE blocked_dates (  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),  room_type   TEXT NOT NULL,  date_from   DATE NOT NULL,  date_to     DATE NOT NULL,  reason      TEXT,  -- &apos;booking&apos; | &apos;maintenance&apos; | &apos;ota_airbnb&apos; | &apos;ota_booking_com&apos;  booking_id  UUID REFERENCES bookings(id) ON DELETE CASCADE,  created_at  TIMESTAMPTZ DEFAULT now());-- Indexes for fast availability queriesCREATE INDEX idx_blocked_room_dates ON blocked_dates(room_type, date_from, date_to);CREATE INDEX idx_bookings_dates ON bookings(room_type, checkin, checkout, status);
+
+1.5 Payment Gateway Decision: Razorpay vs Stripe
+Criterion
+Razorpay
+Stripe
+Recommendation
+Indian UPI support
+✅ Native
+❌ No UPI
+Razorpay
+INR settlement
+✅ Same day
+⚠️ Delayed
+Razorpay
+Guest familiarity (India)
+✅ Very high
+⚠️ Lower
+Razorpay
+International cards
+✅ Supported
+✅ Superior
+Stripe for intl.
+Webhook reliability
+✅ Good
+✅ Excellent
+Tie
+Test mode sandbox
+✅ Full
+✅ Full
+Tie
+Monthly fee
+₹0 + 2% txn
+$0 + 2.9% txn
+Razorpay
+Dashboard UX
+✅ Good
+✅ Excellent
+Stripe (ops)
+
+✅  Decision:  Use Razorpay as the primary payment gateway (UPI + Indian cards + INR settlement). Add Stripe as a secondary option for international guests (Phase 3) via a gateway toggle in the booking flow.
+
+1.6 Booking API Endpoints
+Method
+Endpoint
+Auth
+Description
+GET
+/api/availability
+None
+Returns available dates + price for a room + date range
+POST
+/api/book
+None
+Creates pending booking, acquires 15-min availability lock
+POST
+/api/payment/create
+None
+Creates Razorpay order, returns order_id
+POST
+/api/payment/verify
+None
+Verifies payment signature, confirms booking
+POST
+/api/webhooks/razorpay
+HMAC
+Handles async Razorpay events (failure, refund, capture)
+GET
+/api/admin/bookings
+JWT
+Admin: list all bookings with filters
+PATCH
+/api/admin/bookings/[id]
+JWT
+Admin: update booking status, add notes
+POST
+/api/admin/block-dates
+JWT
+Admin: manually block dates (maintenance, etc.)
+
+  🔄  SECTION 2: OTA SYNCHRONISATION STRATEGY  
+
+2. OTA Synchronisation Strategy
+Online Travel Agencies (OTAs) like Airbnb, Booking.com, and Hostelworld are critical distribution channels for Shasha — especially early on when direct booking traffic is low. Without synchronisation, any OTA booking risks causing a double-booking on the direct website, which is catastrophic for guest trust and host reputation.
+
+2.1 The Double-Booking Problem
+WITHOUT SYNC — The Danger Zone:  Airbnb Guest books Dec 20–22  →  Airbnb calendar updated  Website Guest books Dec 21–23  →  Website calendar NOT updated  ❌ DOUBLE BOOKING — host must cancel one, loses superhost statusWITH SYNC — The Safe Zone:  Airbnb Guest books Dec 20–22  →  iCal feed pushed to sync service  Sync Service  →  Updates blocked_dates in NeonDB  Website Calendar  →  Dec 20–22 now shows as unavailable  ✅ No double booking possible
+
+2.2 OTA Sync Architecture
+                    ┌─────────────────┐                    │   SHASHA WEBSITE │                    │  (Direct Book)   │                    └────────┬─────────┘                             │                             ▼┌──────────────────────────────────────────────────────┐│              AVAILABILITY SERVICE                     ││         (NeonDB blocked_dates table)                 ││                                                      ││  • Single source of truth for all room availability  ││  • Updated by: direct bookings + OTA webhooks        ││  • Queried by: website calendar + OTA iCal feeds     │└────────────┬──────────────┬───────────────┬──────────┘             │              │               │             ▼              ▼               ▼       ┌──────────┐  ┌───────────┐  ┌────────────┐       │  Airbnb  │  │Booking.com│  │Hostelworld │       │  iCal ↕  │  │  iCal ↕  │  │  iCal ↕   │       └──────────┘  └───────────┘  └────────────┘
+
+2.3 Phase 2A — iCal Sync (Low Cost, High Value)
+iCal (RFC 5545) is the universal calendar standard supported by all major OTAs. It requires no paid channel manager — just two endpoints.
+
+Outbound: Website → OTAs
+The website exposes a read-only iCal feed per room type that OTAs subscribe to. This tells OTAs which dates are blocked from direct bookings.
+
+// GET /api/ical/[roomSlug] — returns iCal feed// OTAs poll this URL every 15–60 minutes// Example: /api/ical/duplex-triple// /api/ical/private-room// /api/ical/dorm// Response: text/calendarBEGIN:VCALENDARVERSION:2.0PRODID:-//Shasha Jibhi//Booking//ENBEGIN:VEVENTDTSTART;VALUE=DATE:20251220DTEND;VALUE=DATE:20251223SUMMARY:BLOCKEDUID:sha-booking-uuid@shashajibhi.comEND:VEVENTEND:VCALENDAR
+
+Inbound: OTAs → Website
+The website imports and periodically syncs iCal feeds published by each OTA. When an Airbnb booking is made, the Airbnb iCal feed is updated — our sync job detects this and blocks those dates in NeonDB.
+
+// OTA iCal import cron// scripts/sync-ota-ical.ts — runs as a Vercel Cron Job// Schedule: every 15 minutes  → vercel.json: { crons: [{ path: &apos;/api/cron/sync-ota&apos;, schedule: &apos;*/15 * * * *&apos; }] }const OTA_FEEDS = {  &apos;duplex-triple&apos;: {    airbnb:      &apos;https://www.airbnb.com/calendar/ical/LISTING_ID.ics?s=TOKEN&apos;,    booking_com: &apos;https://ical.booking.com/v1/export?t=TOKEN&apos;,  },  // ... other room types}// For each feed: fetch → parse → diff against DB → upsert new blocks → remove cancelled blocks
+
+OTA
+iCal Export
+iCal Import
+Sync Lag
+Cost
+Airbnb
+✅ Yes (host dashboard)
+✅ Yes (auto-poll)
+15–60 min
+Free
+Booking.com
+✅ Yes (extranet)
+✅ Yes (auto-poll)
+15–60 min
+Free
+Hostelworld
+✅ Yes (hostel dashboard)
+✅ Yes (auto-poll)
+60 min
+Free
+Goibibo/MMT
+⚠️ Via channel manager
+⚠️ Via channel manager
+Real-time
+₹2–5k/mo
+Agoda
+✅ Yes
+✅ Yes
+30 min
+Free
+
+2.4 Phase 2B — Channel Manager (Scale)
+When Shasha scales beyond 3–4 OTA channels or requires real-time sync (sub-1-minute), a channel manager middleware becomes necessary. iCal polling introduces a sync lag window during which double-bookings remain theoretically possible.
+
+Channel Manager
+OTAs Supported
+Real-time Sync
+India Support
+Pricing
+RateGain
+200+
+✅ API push
+✅ Strong
+₹3,000–8,000/mo
+Staah
+200+
+✅ API push
+✅ Strong
+₹2,000–5,000/mo
+Eviivo
+50+
+✅ API push
+⚠️ Limited
+£60–120/mo
+Cloudbeds
+300+
+✅ API push
+✅ Growing
+$100–300/mo
+Little Hotelier
+100+
+✅ API push
+✅ Good
+$80–200/mo
+
+🔶  Phase 2B Decision:  Start with free iCal sync (Phase 2A). If Shasha lists on 4+ OTAs and reaches 50%+ occupancy via OTAs, migrate to Staah or RateGain (₹2,000–3,000/mo) for real-time push sync.
+
+2.5 OTA Sync Data Flow Summary
+OTA Booking
+Guest books on Airbnb/Booking.com. OTA updates its internal calendar.
+iCal Push
+OTA publishes updated .ics feed at its export URL (15–60 min delay).
+Cron Job
+Vercel Cron (/api/cron/sync-ota) fires every 15 min. Fetches all OTA .ics feeds.
+Diff Engine
+Compares fetched events against blocked_dates in NeonDB. Identifies new blocks and cancellations.
+DB Update
+Upserts new blocked_dates rows. Removes rows for cancelled OTA bookings. Sets source=&apos;ota_airbnb&apos; etc.
+Website Cal
+Availability calendar reads from blocked_dates. Newly blocked dates immediately reflect as unavailable.
+Race guard
+If a direct booking is in-flight during a sync, the pessimistic lock (Upstash KV 15-min TTL) prevents a double-confirm.
+
+  📝  SECTION 3: CMS STRATEGY  
+
+3. CMS Strategy
+Phase 1 hardcodes all content in TypeScript constants (rooms.ts, testimonials.ts, imageManifest.ts). This is the correct choice for launch speed, but becomes a bottleneck the moment the hosts want to update a room description, add a new testimonial, or change their pricing without raising a GitHub PR.
+
+3.1 Content That Needs CMS Management
+Content Type
+Current
+Pain Without CMS
+Priority
+Room descriptions + features
+rooms.ts
+Dev PR required for any copy change
+High
+Pricing / rate chart
+rooms.ts
+Dev PR required to update seasonal rates
+Critical
+Gallery images + categories
+imageManifest.ts
+Re-run seed script + redeploy
+Medium
+Testimonials / reviews
+testimonials.ts
+Dev PR required to add new reviews
+High
+Blog posts / travel journal
+Not built
+Cannot publish without code
+Medium
+Homepage hero content
+Hard-coded JSX
+Dev required for any headline change
+High
+FAQ / house rules
+Not built
+Cannot publish without code
+Low
+Cuisine menu / dishes
+Not built
+Cannot publish without code
+Low
+
+3.2 CMS Architecture
+┌───────────────────────────────────────────────────────────┐│                  CMS DASHBOARD                            ││          (Sanity Studio / browser-based)                  ││  Host edits: room copy · prices · images · testimonials   │└────────────────────────┬──────────────────────────────────┘                         │  HTTPS + API token                         ▼┌───────────────────────────────────────────────────────────┐│                SANITY CONTENT LAKE                        ││  (Hosted cloud CDN — globally distributed)                ││  Schemas: Room · Testimonial · BlogPost · SiteConfig      │└───────────┬───────────────────────────────┬───────────────┘            │  GROQ query (build time)       │  Webhook on publish            ▼                                ▼┌──────────────────┐               ┌────────────────────────┐│  NEXT.JS BUILD   │               │   VERCEL REVALIDATION  ││  (SSG / ISR)     │               │   On-demand ISR        ││  Static pages    │               │   /api/revalidate      │└──────────────────┘               └────────────────────────┘            │                                │            └──────────────┬─────────────────┘                           ▼                  ┌─────────────────┐                  │   BROWSER       │                  │  shashajibhi.com│                  └─────────────────┘
+
+3.3 CMS Technology Decision
+Criterion
+Sanity
+Contentful
+Payload CMS
+Notion API
+Setup complexity
+Low
+Low
+Medium (self-host)
+Very Low
+Custom schemas
+✅ Excellent
+✅ Good
+✅ Excellent
+❌ Limited
+Image management
+✅ + transforms
+✅ + CDN
+✅ Local/S3
+❌ Poor
+Real-time preview
+✅ Live preview
+✅ Yes
+✅ Yes
+❌ No
+Next.js integration
+✅ Official
+✅ Official
+✅ Good
+⚠️ Manual
+Free tier
+✅ Generous
+⚠️ Limited
+✅ Self-hosted
+✅ Yes
+Non-tech editing
+✅ Easy Studio
+✅ Easy UI
+⚠️ Admin UI
+✅ Familiar
+ISR / webhooks
+✅ Built-in
+✅ Built-in
+✅ Custom
+⚠️ Manual
+India CDN
+✅ Global CDN
+✅ Global CDN
+Self-managed
+N/A
+
+✅  Decision:  Sanity CMS. Best-in-class Next.js integration, generous free tier (3 users, 500k API calls/mo — well within Shasha&apos;s needs), hosted Sanity Studio that the hosts can access from any browser without any setup, and a mature GROQ query language that integrates cleanly with App Router Server Components.
+
+3.4 Sanity Schema Design
+// Sanity schemas// sanity/schemas/room.tsexport default {  name: &apos;room&apos;, title: &apos;Room&apos;, type: &apos;document&apos;,  fields: [    { name:&apos;slug&apos;,        type:&apos;slug&apos;,   title:&apos;URL slug&apos;, options:{source:&apos;name&apos;} },    { name:&apos;name&apos;,        type:&apos;string&apos;, title:&apos;Room Name&apos; },    { name:&apos;type&apos;,        type:&apos;string&apos;, options:{ list:[&apos;duplex-triple&apos;,&apos;duplex-quad&apos;,&apos;private&apos;,&apos;dorm&apos;] } },    { name:&apos;tagline&apos;,     type:&apos;string&apos;, title:&apos;Short tagline&apos; },    { name:&apos;description&apos;, type:&apos;array&apos;,  of:[{type:&apos;block&apos;}], title:&apos;Rich description&apos; },    { name:&apos;capacity&apos;,    type:&apos;number&apos;, title:&apos;Max guests&apos; },    { name:&apos;priceRoomOnly&apos;, type:&apos;number&apos;, title:&apos;Price (room only, INR)&apos; },    { name:&apos;priceCpPlan&apos;,   type:&apos;number&apos;, title:&apos;CP Plan price per person (INR)&apos; },    { name:&apos;features&apos;,    type:&apos;array&apos;,  of:[{type:&apos;string&apos;}], title:&apos;Feature list&apos; },    { name:&apos;heroImage&apos;,   type:&apos;image&apos;,  title:&apos;Hero image&apos;, options:{hotspot:true} },    { name:&apos;gallery&apos;,     type:&apos;array&apos;,  of:[{type:&apos;image&apos;}], title:&apos;Gallery images&apos; },    { name:&apos;sortOrder&apos;,   type:&apos;number&apos;, title:&apos;Display order&apos; },  ]}// sanity/schemas/testimonial.tsexport default {  name: &apos;testimonial&apos;, title: &apos;Testimonial&apos;, type: &apos;document&apos;,  fields: [    { name:&apos;guestName&apos;, type:&apos;string&apos; },    { name:&apos;stayType&apos;,  type:&apos;string&apos;, options:{list:[&apos;duplex-triple&apos;,&apos;private&apos;,&apos;dorm&apos;]} },    { name:&apos;quote&apos;,     type:&apos;text&apos;,   rows:4 },    { name:&apos;rating&apos;,    type:&apos;number&apos;, validation:(r)=&gt;r.min(1).max(5) },    { name:&apos;stayDate&apos;,  type:&apos;date&apos; },    { name:&apos;published&apos;, type:&apos;boolean&apos;, initialValue:false },  ]}
+
+3.5 CMS Data Fetching in Next.js
+// CMS integration// src/lib/sanity.tsimport { createClient } from &apos;@sanity/client&apos;import { cache } from &apos;react&apos;export const sanityClient = createClient({  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,  dataset: &apos;production&apos;,  apiVersion: &apos;2024-01-01&apos;,  useCdn: true,          // CDN for public data (fast)  token: process.env.SANITY_READ_TOKEN, // For draft preview mode})// Cached GROQ query — runs at build time (SSG) or per-request (ISR)export const getRooms = cache(async () =&gt; {  return sanityClient.fetch(`    *[_type == &apos;room&apos;] | order(sortOrder asc) {      _id, slug, name, type, tagline, description,      capacity, priceRoomOnly, priceCpPlan, features,      &apos;heroImage&apos;: heroImage.asset-&gt;url,      &apos;gallery&apos;: gallery[].asset-&gt;url    }  `)})// ISR revalidation webhook — /api/revalidate// Sanity triggers this on every content publish// Next.js revalidates only the affected page, not the full site
+
+3.6 CMS Implementation Phases
+Phase
+CMS Scope
+Who Benefits
+2A — Immediate
+Room descriptions, pricing, hero copy, testimonials
+Hosts can update without dev
+2B — Month 2
+Gallery image management (replace Cloudinary seed script)
+Hosts can add/remove photos
+2C — Month 3
+Blog posts / travel journal (MDX via Sanity Portable Text)
+Content marketing
+3  — Future
+Cuisine menu, experiences, FAQ, house rules
+Full site autonomy
+
+  📊  SECTION 4: ANALYTICS ARCHITECTURE  
+
+4. Analytics Architecture
+Vercel Analytics provides Core Web Vitals monitoring but offers no visibility into user behaviour — where guests drop off, which rooms they view most, what makes them submit the contact form. Without behavioural analytics, there is no data-driven way to improve conversion.
+
+4.1 Analytics Stack — Three Layers
+┌─────────────────────────────────────────────────────────────┐│                    LAYER 1: PERFORMANCE                     ││  Vercel Speed Insights — LCP, INP, CLS per route            ││  Lighthouse CI — automated budget in GitHub Actions          │└─────────────────────────────────────────────────────────────┘                             │                             ▼┌─────────────────────────────────────────────────────────────┐│                 LAYER 2: BEHAVIOURAL (PostHog)              ││  Funnels · Session recordings · Heatmaps · A/B tests        ││  Events: page_view, room_view, form_step_*, booking_start   │└─────────────────────────────────────────────────────────────┘                             │                             ▼┌─────────────────────────────────────────────────────────────┐│               LAYER 3: BUSINESS (Custom Dashboard)          ││  Enquiries · Bookings · Revenue · Occupancy rate            ││  Source: NeonDB → Admin dashboard (Phase 2)                 │└─────────────────────────────────────────────────────────────┘
+
+4.2 PostHog — Event Taxonomy
+All analytics events follow a consistent naming convention: object_action (snake_case). Events are fired client-side via the PostHog React SDK.
+
+Event Name
+Trigger
+Key Properties
+page_view
+Any page load (auto-captured)
+path, referrer, utm_source, utm_medium, utm_campaign
+room_card_clicked
+Click on any room card
+room_type, source_page (home|stay|gallery)
+room_page_viewed
+Reach /stay/[room] page
+room_type, scroll_depth_pct
+gallery_opened
+Open gallery lightbox
+image_category, image_index
+cta_clicked
+Any primary CTA button click
+cta_label, source_section
+form_step_started
+First interaction with form Step N
+step (1|2|3), room_type_preselected
+form_step_completed
+Successfully advance to next step
+step, time_on_step_seconds
+form_step_abandoned
+Leave page while form is in progress
+step, last_field_touched
+form_submitted
+Successful POST /api/contact
+room_type, meal_plan, nights, source
+booking_started
+Click &apos;Book Now&apos; on /book page
+room_type, checkin, checkout, guests
+booking_completed
+Payment verified, booking confirmed
+room_type, nights, deposit_amount, payment_method
+booking_abandoned
+Exit /book before payment complete
+step_reached, room_type
+ota_referral
+Traffic from OTA (via UTM or referrer)
+ota_source, landing_page
+
+4.3 Key Funnels to Track
+Funnel 1: Lead Capture (Phase 1)
+Step 1
+homepage — Landing page visit. Drop-off metric: bounce rate.
+Step 2
+room_page_viewed — At least one room page viewed.
+Step 3
+form_step_started — Guest begins the contact form.
+Step 4
+form_step_completed (step=2) — Guest reaches review step.
+Step 5
+form_submitted — Successful enquiry. Target conversion: 3–5% of homepage visits.
+
+Funnel 2: Booking Conversion (Phase 2)
+Step 1
+availability_checked — Guest checks dates on availability calendar.
+Step 2
+booking_started — Guest begins the booking wizard.
+Step 3
+payment_initiated — Guest reaches the payment step.
+Step 4
+booking_completed — Payment successful. Target: 40–60% of booking_started.
+
+4.4 PostHog Implementation
+// Analytics setup// src/lib/analytics.tsimport posthog from &apos;posthog-js&apos;export function initAnalytics() {  if (typeof window === &apos;undefined&apos;) return  posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY!, {    api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST,    capture_pageview: false,      // Manual — we control when    capture_pageleave: true,    session_recording: {      maskAllInputs: true,        // GDPR: mask form fields      maskInputOptions: { password: true, email: true, tel: true }    },    persistence: &apos;localStorage&apos;,  })}// Type-safe event wrapperexport function track(event: AnalyticsEvent, props?: Record&lt;string, unknown&gt;) {  posthog.capture(event, props)}// Usage in components:// track(&apos;form_step_completed&apos;, { step: 1, time_on_step_seconds: 42 })// track(&apos;room_card_clicked&apos;,   { room_type: &apos;duplex-triple&apos;, source_page: &apos;home&apos; })
+
+4.5 UTM Tracking Strategy
+All links shared on social media, OTA profiles, and marketing materials must include UTM parameters so PostHog can attribute traffic to the correct source.
+
+Channel
+utm_source
+utm_medium
+utm_campaign
+Instagram bio link
+instagram
+social
+profile_link
+Instagram post/reel
+instagram
+social
+post_[date]
+WhatsApp broadcast
+whatsapp
+messaging
+broadcast_[month]
+Airbnb profile
+airbnb
+ota
+listing_description
+Booking.com listing
+booking_com
+ota
+property_description
+Google Business
+google
+local
+gmb_profile
+Travel blog feature
+blog_[name]
+referral
+feature_[month]
+
+  🔍  SECTION 5: MONITORING &amp; LOGGING  
+
+5. Monitoring &amp; Logging
+Production systems fail silently without monitoring. For Shasha, a broken contact form, a failed payment webhook, or a crashing SSR page could mean lost bookings with no alert to the host or developer. This section defines a comprehensive observability stack covering error monitoring, structured logging, and alerting.
+
+5.1 Observability Architecture
+┌─────────────────────────────────────────────────────────────┐│                 SHASHA APPLICATION                          ││  Next.js RSC · API Routes · Cron Jobs · Edge Middleware     │└─────────┬──────────────────────┬───────────────────────────┘          │ Errors/Exceptions     │ Structured logs          ▼                       ▼┌──────────────────┐    ┌────────────────────────┐│     SENTRY       │    │        AXIOM           ││ Error tracking   │    │  Log aggregation       ││ Performance mon. │    │  Full-text search      ││ Release tracking │    │  Retention: 30 days    │└────────┬─────────┘    └───────────┬────────────┘         │                           │         └──────────┬────────────────┘                    ▼         ┌───────────────────────┐         │     SLACK ALERTS      │         │  #shasha-production   │         │  #shasha-bookings     │         └───────────────────────┘
+
+5.2 Sentry — Error Monitoring
+What Sentry Captures
+Error Type
+Example
+Alert Threshold
+API route crash
+Unhandled exception in /api/contact
+Every occurrence
+Payment webhook failure
+Razorpay signature verification failed
+Every occurrence
+SSR render error
+Unhandled promise in Server Component
+Every occurrence
+Client-side JS error
+Uncaught TypeError in GalleryGrid
+&gt;3 in 5 minutes
+OTA sync cron failure
+iCal fetch timeout or parse error
+Every occurrence
+Database query error
+NeonDB connection pool exhausted
+Every occurrence
+Email delivery failure
+Resend API 5xx response
+Every occurrence
+Performance regression
+API route P95 latency &gt; 3s
+Continuous
+
+Sentry Setup
+// Sentry config// next.config.ts — Sentry integration via withSentryConfigimport { withSentryConfig } from &apos;@sentry/nextjs&apos;export default withSentryConfig(nextConfig, {  org: &apos;shasha-jibhi&apos;,  project: &apos;shasha-web&apos;,  silent: true,  widenClientFileUpload: true,  hideSourceMaps: true,    // Don&apos;t expose source maps in prod  disableLogger: true,})// src/instrumentation.ts — Sentry init for both client + serverexport async function register() {  if (process.env.NEXT_RUNTIME === &apos;nodejs&apos;) {    await import(&apos;./sentry.server.config&apos;)  }  if (process.env.NEXT_RUNTIME === &apos;edge&apos;) {    await import(&apos;./sentry.edge.config&apos;)  }}// Manual error capture in API routesimport * as Sentry from &apos;@sentry/nextjs&apos;try {  await sendHostNotification(data)} catch (err) {  Sentry.captureException(err, {    tags: { component: &apos;resend&apos;, action: &apos;host_notification&apos; },    extra: { bookingId, guestEmail: data.email }  })  // Fail gracefully — booking is confirmed, email failure is non-fatal}
+
+5.3 Structured Logging with Pino + Axiom
+Why Structured Logging
+console.log is ephemeral and unsearchable in production. Structured JSON logs sent to Axiom enable full-text search, filtering by booking ID or guest email, and retention for compliance and debugging.
+
+Log Taxonomy
+Log Name
+Level
+When Fired
+Key Fields
+inquiry.received
+info
+Contact form POST received
+bookingId, roomType, checkin, source
+inquiry.sent
+info
+Both emails sent successfully
+bookingId, guestEmail, duration_ms
+inquiry.spam_blocked
+warn
+Honeypot or Turnstile block
+ip, reason, ua
+inquiry.rate_limited
+warn
+IP rate limit hit
+ip, limit_key
+inquiry.duplicate
+warn
+Duplicate submission discarded
+dedupKey, ip
+booking.created
+info
+Pending booking created
+bookingId, roomType, amount
+booking.confirmed
+info
+Payment verified, booking live
+bookingId, paymentId, deposit
+booking.failed
+error
+Payment failed
+bookingId, razorpayOrderId, reason
+ota.sync_started
+info
+Cron job begins iCal sync
+feeds_count, timestamp
+ota.sync_completed
+info
+iCal sync finished
+new_blocks, removed_blocks, duration_ms
+ota.sync_error
+error
+iCal fetch or parse error
+ota_name, url, error_message
+api.error
+error
+Unhandled API route exception
+route, method, error, stack
+
+Pino + Axiom Implementation
+// Structured logger// src/lib/logger.tsimport pino from &apos;pino&apos;const isProduction = process.env.NODE_ENV === &apos;production&apos;export const logger = pino({  level: isProduction ? &apos;info&apos; : &apos;debug&apos;,  transport: isProduction ? {    target: &apos;@axiomhq/pino&apos;,    options: {      dataset: &apos;shasha-production&apos;,      token: process.env.AXIOM_TOKEN,    }  } : {    target: &apos;pino-pretty&apos;,  // Human-readable in dev    options: { colorize: true }  },  base: {    env: process.env.NODE_ENV,    service: &apos;shasha-web&apos;,    version: process.env.NEXT_PUBLIC_APP_VERSION,  }})// Usage in API routes:logger.info({ event:&apos;inquiry.received&apos;, bookingId, roomType, checkin }, &apos;New enquiry received&apos;)logger.warn({ event:&apos;inquiry.spam_blocked&apos;, ip, reason:&apos;honeypot&apos; }, &apos;Spam blocked&apos;)logger.error({ event:&apos;ota.sync_error&apos;, ota:&apos;airbnb&apos;, error:err.message }, &apos;OTA sync failed&apos;)
+
+5.4 Slack Alerting Architecture
+Alert Channels
+Slack Channel
+Alert Source
+Alert Conditions
+#shasha-production
+Sentry
+Any unhandled error in production — immediate
+#shasha-production
+Axiom alert
+api.error log level — batched, 5-min window
+#shasha-bookings
+App webhook
+booking.confirmed — every new booking
+#shasha-bookings
+App webhook
+booking.failed — every failed payment
+#shasha-bookings
+Axiom alert
+inquiry.received — daily digest at 9am IST
+#shasha-ops
+Axiom alert
+ota.sync_error — any OTA sync failure
+#shasha-ops
+Upstash alert
+Rate limit hits &gt; 20/hr from single IP
+#shasha-ops
+Vercel
+Deployment success/failure on main branch
+
+Slack Webhook Integration
+// Slack notifications// src/lib/slack.tsexport async function notifySlack(channel: &apos;production&apos;|&apos;bookings&apos;|&apos;ops&apos;, message: SlackMessage) {  const webhookUrl = {    production: process.env.SLACK_WEBHOOK_PRODUCTION,    bookings:   process.env.SLACK_WEBHOOK_BOOKINGS,    ops:        process.env.SLACK_WEBHOOK_OPS,  }[channel]  await fetch(webhookUrl!, {    method: &apos;POST&apos;,    headers: { &apos;Content-Type&apos;: &apos;application/json&apos; },    body: JSON.stringify({      blocks: [        { type:&apos;header&apos;, text:{ type:&apos;plain_text&apos;, text: message.title } },        { type:&apos;section&apos;, fields: message.fields.map(f =&gt;          ({ type:&apos;mrkdwn&apos;, text:`*${f.label}*\n${f.value}` })) },        { type:&apos;context&apos;, elements:[{ type:&apos;mrkdwn&apos;, text: message.footer }] }      ]    })  })}// Example: booking confirmed alertawait notifySlack(&apos;bookings&apos;, {  title: &apos;✅ New Booking Confirmed!&apos;,  fields: [    { label:&apos;Guest&apos;,    value: data.name },    { label:&apos;Room&apos;,     value: &apos;Duplex Cottage (Triple)&apos; },    { label:&apos;Dates&apos;,    value: &apos;Dec 20 – Dec 23 (3 nights)&apos; },    { label:&apos;Deposit&apos;,  value: &apos;₹2,880 received&apos; },  ],  footer: &apos;via shashajibhi.com · Razorpay txn pay_xxxxxxxx&apos;,})
+
+5.5 Monitoring Runbook
+A runbook defines how to respond to each class of alert. This is the first document a developer or on-call host reads when an alert fires.
+
+Alert
+Severity
+First Response
+Resolution
+Contact form POST 500
+P1 — Critical
+Check Sentry for stack trace within 5 min
+Fix and hotfix deploy within 1 hour
+Payment webhook 500
+P1 — Critical
+Check Razorpay dashboard for pending events
+Manual payment confirm in admin if needed
+OTA sync failure
+P2 — High
+Check Axiom for ota.sync_error logs
+Re-run sync manually: pnpm run sync:ota
+Email delivery failure
+P2 — High
+Check Resend dashboard for bounces
+Resend manually from host email if needed
+Rate limit spike (&gt;20/hr)
+P3 — Medium
+Check Axiom for IP pattern
+Block IP in Vercel Edge firewall if malicious
+JS error spike (client)
+P3 — Medium
+Check Sentry for error group
+Hotfix or feature flag off if critical component
+High LCP (&gt;3.5s)
+P4 — Low
+Check Vercel Speed Insights for route
+Image optimisation or Cloudinary transform fix
+
+6. Combined Implementation Timeline
+This timeline overlays all five architecture domains against the existing 5-sprint TAD v1.0 plan and extends it through Phase 2.
+
+Sprint / Week
+Primary Focus
+Sections Delivered
+Week 1–5 (TAD v1.0)
+Phase 1 — Marketing site + lead capture
+Full PRD + TAD scope
+Week 6
+Analytics + Monitoring foundation
+PostHog init · Sentry · Pino+Axiom · Slack webhooks
+Week 7
+CMS — Sanity setup + room schemas
+Sanity Studio · Room + Testimonial schemas · ISR revalidation
+Week 8
+CMS — Full content migration
+All static data migrated from TS constants to Sanity
+Week 9
+Booking engine — DB + API
+NeonDB schema · /api/availability · /api/book · /api/payment/*
+Week 10
+Booking engine — UI
+Availability calendar · Booking wizard · Payment modal (Razorpay)
+Week 11
+OTA iCal sync (Phase 2A)
+/api/ical/[room] · Sync cron job · Diff engine
+Week 12
+Booking QA + hardening
+E2E booking flow tests · Race condition tests · Webhook tests
+Month 4
+Channel Manager eval (Phase 2B)
+Staah/RateGain POC if OTA volume justifies cost
+Month 5
+Admin dashboard
+Bookings list · Availability manager · Revenue reports
+Month 6
+International payments
+Stripe secondary gateway for non-INR guests
+
+6.1 Dependency Map
+Phase 1 (TAD v1.0) ────────────────────────────────────────────────────  Lead capture form · Static site · Cloudinary images        │        ├── Analytics (Week 6) ← No dependency, can start anytime        │        ├── Monitoring (Week 6) ← No dependency, can start anytime        │        ├── CMS (Week 7–8)        │       └── Requires: Sanity account + schema design        │        └── Booking Engine (Week 9–12)                └── Requires: NeonDB setup (from TAD Phase 3)                └── Requires: Razorpay account + KYC verified                └── Requires: OTA accounts listed (Airbnb/Booking.com)                        │                        └── OTA Sync (Week 11)                                └── Requires: Booking engine complete                                └── Requires: iCal endpoint live                                └── Requires: OTA listings active
+
+6.2 Environment Variables — New Additions
+# .env.example — addendum additions# .env.example additions for Addendum sections# SentrySENTRY_DSN=https://xxxx@sentry.io/xxxxxSENTRY_ORG=shasha-jibhiSENTRY_PROJECT=shasha-webSENTRY_AUTH_TOKEN=           # For source map upload in CI# Axiom LoggingAXIOM_TOKEN=                 # Dataset write tokenAXIOM_DATASET=shasha-production# SlackSLACK_WEBHOOK_PRODUCTION=https://hooks.slack.com/services/...SLACK_WEBHOOK_BOOKINGS=https://hooks.slack.com/services/...SLACK_WEBHOOK_OPS=https://hooks.slack.com/services/...# Sanity CMSNEXT_PUBLIC_SANITY_PROJECT_ID=NEXT_PUBLIC_SANITY_DATASET=productionSANITY_READ_TOKEN=           # For draft/preview modeSANITY_WEBHOOK_SECRET=       # For ISR revalidation webhook# RazorpayRAZORPAY_KEY_ID=             # Public — also add as NEXT_PUBLIC_RAZORPAY_KEY_SECRET=         # Server only — never exposeRAZORPAY_WEBHOOK_SECRET=     # For webhook signature verification# OTA iCal feed URLs (one per room per OTA)OTA_AIRBNB_ICAL_DUPLEX_TRIPLE=https://www.airbnb.com/calendar/ical/...OTA_BOOKING_COM_ICAL_DUPLEX_TRIPLE=https://ical.booking.com/v1/export?...# etc.
+
+End of Document
+Shasha: Paused Perfect  ·  System Architecture Addendum v1.0  ·  March 2026

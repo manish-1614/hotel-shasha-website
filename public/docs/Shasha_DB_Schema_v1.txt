@@ -1,0 +1,222 @@
+SHASHA: PAUSED PERFECT
+Jibhi, Himachal Pradesh
+  DATABASE SCHEMA DOCUMENT  ·  DB v1.0  
+
+Database Schema Document
+DDL · ERD · Indexes · Migrations · Seed Data
+
+Version 1.0  ·  March 2026
+Author: Manish — Senior Full-Stack Architect
+Repository: github.com/manish-1614/hotel-shasha-website
+
+1. Overview &amp; Design Decisions
+This document specifies the complete PostgreSQL database schema for the Shasha Jibhi platform. The database is introduced in Phase 2 using NeonDB (serverless PostgreSQL) with Drizzle ORM for type-safe queries. Phase 1 operates without a database — all enquiry data flows through email only.
+
+Attribute
+Value
+Engine
+PostgreSQL 16 (NeonDB serverless)
+ORM
+Drizzle ORM v0.30+ — schema-first, type-safe, no runtime overhead
+Connection
+Neon serverless driver (@neondatabase/serverless) with connection pooling
+Migrations
+Drizzle Kit — drizzle-kit generate:pg + drizzle-kit push:pg
+Schema file
+src/db/schema.ts (single file, all tables)
+Naming convention
+snake_case for tables and columns · plural table names · id as primary key
+Primary keys
+UUID v7 (time-ordered) via gen_random_uuid() — prefixed for readability (enq_, room_, etc.)
+Timestamps
+created_at + updated_at on all tables · auto-managed via Drizzle timestamps()
+Soft deletes
+deleted_at timestamp where applicable — no hard deletes on user-facing records
+Data residency
+NeonDB us-east-1 region (Phase 2 may migrate to Singapore for latency)
+
+⚠  The database is NOT used in Phase 1. All schema and DDL in this document is forward-looking for Phase 2 implementation. The schema is designed to be extensible — Phase 3 tables are documented but not deployed until needed.
+2. Entity Relationship Diagram (Text)
+The following ASCII ERD shows all tables, their primary/foreign key relationships, and cardinality for Phase 2 scope.
+
+┌───────────────────┐       ┌───────────────────┐│     rooms         │       │   rate_configs     ││─────────────────  │       │─────────────────── ││ PK id             │──────►│ FK room_type (enum)││    slug           │  1:N  │    season          ││    name           │       │    price_room_only ││    type (enum)    │       │    price_cp_person ││    capacity       │       │    valid_from      ││    description    │       │    valid_to        ││    features[]     │       └───────────────────┘│    price_base     ││    is_active      │       ┌───────────────────┐│    sort_order     │       │   blocked_dates   │└──────────┬────────┘       │────────────────── │           │                │ PK id             │           │ 1:N            │ FK room_id        │◄─── rooms.id           │                │    date_from      │           ▼                │    date_to        │┌───────────────────┐       │    reason         ││    enquiries      │       └───────────────────┘│─────────────────  ││ PK id             │       ┌───────────────────┐│    name           │       │  gallery_images   ││    email          │       │───────────────────││    phone          │       │ PK id             ││    city           │       │    cloudinary_id  ││    room_type(enum)│       │    category(enum) ││ FK room_id        │───────│    alt_text       ││    checkin        │  N:1  │    featured       ││    checkout       │       │    sort_order     ││    nights(computed│       │    width          ││    guests         │       │    height         ││    meal_plan(enum)│       └───────────────────┘│    requests       ││    source(enum)   │       ┌───────────────────┐│    status(enum)   │       │   testimonials    ││    est_revenue    │       │───────────────────││    host_notes     │       │ PK id             ││    ip_hash        │       │    guest_name     ││    created_at     │       │    stay_type      ││    updated_at     │       │    quote          │└───────────────────┘       │    rating         │                            │    source         │┌───────────────────┐       │    is_published   ││  admin_users      │       │    created_at     ││───────────────────│       └───────────────────┘│ PK id             ││    email          ││    password_hash  ││    role           ││    last_login_at  ││    created_at     │└───────────────────┘
+3. Table Schemas — Full DDL
+3.1 enquiries
+The primary data table. Every successfully processed contact form submission creates one record. This is the source of truth for all guest leads.
+
+-- enquiries table DDLCREATE TABLE enquiries (  id              TEXT        PRIMARY KEY DEFAULT &apos;enq_&apos; || replace(gen_random_uuid()::text, &apos;-&apos;, &apos;&apos;),  -- Guest personal details  name            VARCHAR(80)  NOT NULL,  email           VARCHAR(255) NOT NULL,  phone           VARCHAR(15)  NOT NULL,  city            VARCHAR(60),  -- Stay preferences  room_type       room_type_enum NOT NULL,  room_id         TEXT         REFERENCES rooms(id),  checkin         DATE         NOT NULL,  checkout        DATE         NOT NULL,  nights          INTEGER      GENERATED ALWAYS AS (checkout - checkin) STORED,  guests          SMALLINT     NOT NULL CHECK (guests BETWEEN 1 AND 8),  meal_plan       meal_plan_enum NOT NULL,  requests        TEXT         CHECK (char_length(requests) &lt;= 400),  source          source_enum,  -- Computed financials  estimated_revenue INTEGER,   -- in INR, calculated at insert time  -- CRM workflow  status          enquiry_status_enum NOT NULL DEFAULT &apos;new&apos;,  host_notes      TEXT,        -- internal notes from host  -- Privacy &amp; audit  ip_hash         VARCHAR(64), -- SHA-256 of IP — for dedup analytics only  -- Timestamps  created_at      TIMESTAMPTZ NOT NULL DEFAULT now(),  updated_at      TIMESTAMPTZ NOT NULL DEFAULT now(),  deleted_at      TIMESTAMPTZ             -- soft delete);-- Enum definitionsCREATE TYPE room_type_enum AS ENUM (  &apos;duplex-triple&apos;, &apos;duplex-quad&apos;, &apos;private&apos;, &apos;dorm&apos;);CREATE TYPE meal_plan_enum AS ENUM (  &apos;room-only&apos;, &apos;cp-plan&apos;, &apos;full-board&apos;);CREATE TYPE source_enum AS ENUM (  &apos;instagram&apos;, &apos;google&apos;, &apos;friend&apos;, &apos;blog&apos;, &apos;ota&apos;, &apos;other&apos;);CREATE TYPE enquiry_status_enum AS ENUM (  &apos;new&apos;, &apos;contacted&apos;, &apos;confirmed&apos;, &apos;cancelled&apos;, &apos;completed&apos;);
+
+enquiries — Column Reference
+Column
+Type
+Nullable
+Default
+Description
+id
+TEXT
+No
+&apos;enq_&apos; + UUID
+Primary key with readable prefix
+name
+VARCHAR(80)
+No
+—
+Guest full name
+email
+VARCHAR(255)
+No
+—
+Guest email — used for dedup and communication
+phone
+VARCHAR(15)
+No
+—
+10-digit Indian mobile
+city
+VARCHAR(60)
+Yes
+NULL
+Guest home city — for personalisation
+room_type
+room_type_enum
+No
+—
+Room type selected in form Step 2
+room_id
+TEXT (FK)
+Yes
+NULL
+FK to rooms.id (nullable — room types may not all be in DB yet)
+checkin
+DATE
+No
+—
+Requested check-in date
+checkout
+DATE
+No
+—
+Requested check-out date
+nights
+INTEGER
+No
+Generated
+Computed: checkout − checkin. Stored for query performance.
+guests
+SMALLINT
+No
+—
+Number of guests (1–8)
+meal_plan
+meal_plan_enum
+No
+—
+Meal plan selection
+requests
+TEXT
+Yes
+NULL
+Free-text special requests. Max 400 chars enforced by check.
+source
+source_enum
+Yes
+NULL
+How guest discovered Shasha
+estimated_revenue
+INTEGER
+Yes
+NULL
+Calculated INR estimate at submission time
+status
+enquiry_status_enum
+No
+&apos;new&apos;
+CRM workflow status — updated by admin
+host_notes
+TEXT
+Yes
+NULL
+Internal host notes — never shown to guest
+ip_hash
+VARCHAR(64)
+Yes
+NULL
+SHA-256(IP) — for abuse analytics. Not the raw IP.
+created_at
+TIMESTAMPTZ
+No
+now()
+Submission timestamp
+updated_at
+TIMESTAMPTZ
+No
+now()
+Last update timestamp
+deleted_at
+TIMESTAMPTZ
+Yes
+NULL
+Soft delete — NULL means active
+
+3.2 rooms
+Static room catalog. In Phase 1, room data lives in src/data/rooms.ts. Phase 2 migrates this to the database for admin-managed updates without code deployments.
+
+CREATE TABLE rooms (  id          TEXT        PRIMARY KEY DEFAULT &apos;room_&apos; || replace(gen_random_uuid()::text, &apos;-&apos;, &apos;&apos;),  slug        VARCHAR(60)  NOT NULL UNIQUE, -- URL slug: duplex-cottage, private-room, dorm  name        VARCHAR(100) NOT NULL,  type        room_type_enum NOT NULL,  capacity    SMALLINT     NOT NULL,        -- max guests  description TEXT,  features    TEXT[]       NOT NULL DEFAULT &apos;{}&apos;, -- e.g. {&apos;Skylight roof&apos;,&apos;Valley view&apos;}  price_base  INTEGER      NOT NULL,        -- base price room-only in INR  is_active   BOOLEAN      NOT NULL DEFAULT true,  sort_order  SMALLINT     NOT NULL DEFAULT 0,  created_at  TIMESTAMPTZ NOT NULL DEFAULT now(),  updated_at  TIMESTAMPTZ NOT NULL DEFAULT now());
+
+3.3 rate_configs
+Seasonal pricing configurations. Supports multiple active rate tiers (standard, peak, off-season) with date ranges. The application selects the most specific active rate for a given checkin date.
+
+CREATE TYPE rate_season_enum AS ENUM (&apos;standard&apos;, &apos;peak&apos;, &apos;offseason&apos;);CREATE TABLE rate_configs (  id                  TEXT        PRIMARY KEY DEFAULT gen_random_uuid()::text,  room_type           room_type_enum NOT NULL,  season              rate_season_enum NOT NULL DEFAULT &apos;standard&apos;,  price_room_only     INTEGER      NOT NULL,        -- INR per night  price_cp_per_person INTEGER      NOT NULL,        -- INR per person per night (CP plan)  valid_from          DATE         NOT NULL,  valid_to            DATE         NOT NULL,  is_active           BOOLEAN      NOT NULL DEFAULT true,  created_at          TIMESTAMPTZ NOT NULL DEFAULT now(),  updated_at          TIMESTAMPTZ NOT NULL DEFAULT now(),  CONSTRAINT valid_date_range CHECK (valid_to &gt; valid_from));
+
+3.4 gallery_images
+Managed image catalog. In Phase 1, this is a static TypeScript file (imageManifest.ts). Phase 2 persists it here for admin-managed ordering, alt text, and featured image selection.
+
+CREATE TYPE image_category_enum AS ENUM (  &apos;food&apos;, &apos;rooms-interior&apos;, &apos;rooms-lifestyle&apos;, &apos;exterior-drone&apos;, &apos;exterior-ground&apos;);CREATE TABLE gallery_images (  id             TEXT        PRIMARY KEY DEFAULT gen_random_uuid()::text,  cloudinary_id  VARCHAR(255) NOT NULL UNIQUE, -- e.g. shasha/food/2Y4A8137  category       image_category_enum NOT NULL,  alt_text       VARCHAR(255) NOT NULL,  featured       BOOLEAN      NOT NULL DEFAULT false,  sort_order     SMALLINT     NOT NULL DEFAULT 0,  width          SMALLINT,    -- original pixel width (for aspect ratio)  height         SMALLINT,    -- original pixel height  is_active      BOOLEAN      NOT NULL DEFAULT true,  created_at     TIMESTAMPTZ NOT NULL DEFAULT now());
+
+3.5 testimonials
+
+CREATE TYPE testimonial_source_enum AS ENUM (&apos;direct&apos;, &apos;google&apos;, &apos;booking&apos;, &apos;instagram&apos;);CREATE TABLE testimonials (  id            TEXT        PRIMARY KEY DEFAULT gen_random_uuid()::text,  guest_name    VARCHAR(80)  NOT NULL,  stay_type     room_type_enum,              -- which room they stayed in  quote         TEXT         NOT NULL CHECK (char_length(quote) &lt;= 500),  rating        SMALLINT     NOT NULL CHECK (rating BETWEEN 1 AND 5),  source        testimonial_source_enum NOT NULL DEFAULT &apos;direct&apos;,  is_published  BOOLEAN      NOT NULL DEFAULT false, -- must be explicitly published  created_at    TIMESTAMPTZ NOT NULL DEFAULT now());
+
+3.6 blocked_dates  (Phase 3)
+
+CREATE TABLE blocked_dates (  id          TEXT        PRIMARY KEY DEFAULT gen_random_uuid()::text,  room_id     TEXT         NOT NULL REFERENCES rooms(id) ON DELETE CASCADE,  date_from   DATE         NOT NULL,  date_to     DATE         NOT NULL,  reason      VARCHAR(255),                -- &apos;Maintenance&apos;, &apos;Personal stay&apos;, etc.  created_at  TIMESTAMPTZ NOT NULL DEFAULT now(),  CONSTRAINT valid_block_range CHECK (date_to &gt;= date_from));
+
+3.7 admin_users  (Phase 2)
+
+CREATE TYPE admin_role_enum AS ENUM (&apos;super_admin&apos;, &apos;host&apos;);CREATE TABLE admin_users (  id              TEXT        PRIMARY KEY DEFAULT gen_random_uuid()::text,  email           VARCHAR(255) NOT NULL UNIQUE,  password_hash   VARCHAR(255) NOT NULL, -- bcrypt, cost factor 12  role            admin_role_enum NOT NULL DEFAULT &apos;host&apos;,  last_login_at   TIMESTAMPTZ,  created_at      TIMESTAMPTZ NOT NULL DEFAULT now(),  updated_at      TIMESTAMPTZ NOT NULL DEFAULT now());-- Seed: initial admin users (run once during Phase 2 setup)-- Passwords set via admin setup script — never stored in codebase
+4. Indexes
+All indexes are documented with their purpose and the queries they optimise. Over-indexing on a small dataset is avoided — only indexes that serve real query patterns are created.
+
+-- enquiries table indexesCREATE INDEX idx_enquiries_email  ON enquiries(email)  WHERE deleted_at IS NULL;-- Purpose: Deduplication lookup by email + checkinCREATE INDEX idx_enquiries_checkin  ON enquiries(checkin)  WHERE deleted_at IS NULL;-- Purpose: Filter enquiries by date range in admin dashboardCREATE INDEX idx_enquiries_status  ON enquiries(status)  WHERE deleted_at IS NULL;-- Purpose: Filter by status (new/contacted/confirmed)CREATE INDEX idx_enquiries_created_at  ON enquiries(created_at DESC)  WHERE deleted_at IS NULL;-- Purpose: Default sort in admin dashboard (newest first)CREATE UNIQUE INDEX idx_enquiries_dedup  ON enquiries(email, checkin)  WHERE deleted_at IS NULL;-- Purpose: DB-level deduplication constraint (belt + suspenders with Redis dedup)-- rooms table indexesCREATE UNIQUE INDEX idx_rooms_slug ON rooms(slug) WHERE is_active = true;-- Purpose: URL slug lookup: /stay/duplex-cottage → rooms WHERE slug=&apos;duplex-cottage&apos;-- rate_configs table indexesCREATE INDEX idx_rate_configs_room_type_dates  ON rate_configs(room_type, valid_from, valid_to)  WHERE is_active = true;-- Purpose: Find applicable rate for a given room + checkin date-- gallery_images table indexesCREATE INDEX idx_gallery_images_category  ON gallery_images(category, sort_order)  WHERE is_active = true;-- Purpose: Gallery filter by category with sort orderCREATE INDEX idx_gallery_images_featured  ON gallery_images(featured)  WHERE featured = true AND is_active = true;-- Purpose: Fetch featured images for homepage / room pages-- testimonials table indexesCREATE INDEX idx_testimonials_published  ON testimonials(is_published, created_at DESC)  WHERE is_published = true;-- Purpose: Fetch published testimonials for homepage carousel
+5. Drizzle ORM Schema — src/db/schema.ts
+The Drizzle schema is the single source of truth for the database in the application. Raw DDL above is for documentation and review — the actual tables are managed via Drizzle Kit migrations.
+
+import { pgTable, text, varchar, smallint, integer, boolean,         date, timestamp, pgEnum, check, uniqueIndex, index } from &apos;drizzle-orm/pg-core&apos;import { sql } from &apos;drizzle-orm&apos;// ── Enums ────────────────────────────────────────────────────────────export const roomTypeEnum = pgEnum(&apos;room_type_enum&apos;, [  &apos;duplex-triple&apos;, &apos;duplex-quad&apos;, &apos;private&apos;, &apos;dorm&apos;])export const mealPlanEnum = pgEnum(&apos;meal_plan_enum&apos;, [  &apos;room-only&apos;, &apos;cp-plan&apos;, &apos;full-board&apos;])export const sourceEnum = pgEnum(&apos;source_enum&apos;, [  &apos;instagram&apos;, &apos;google&apos;, &apos;friend&apos;, &apos;blog&apos;, &apos;ota&apos;, &apos;other&apos;])export const enquiryStatusEnum = pgEnum(&apos;enquiry_status_enum&apos;, [  &apos;new&apos;, &apos;contacted&apos;, &apos;confirmed&apos;, &apos;cancelled&apos;, &apos;completed&apos;])export const imageCategoryEnum = pgEnum(&apos;image_category_enum&apos;, [  &apos;food&apos;, &apos;rooms-interior&apos;, &apos;rooms-lifestyle&apos;, &apos;exterior-drone&apos;, &apos;exterior-ground&apos;])// ── enquiries ────────────────────────────────────────────────────────export const enquiries = pgTable(&apos;enquiries&apos;, {  id:               text(&apos;id&apos;).primaryKey().$defaultFn(() =&gt; &apos;enq_&apos; + crypto.randomUUID().replace(/-/g,&apos;&apos;)),  name:             varchar(&apos;name&apos;,    { length: 80  }).notNull(),  email:            varchar(&apos;email&apos;,   { length: 255 }).notNull(),  phone:            varchar(&apos;phone&apos;,   { length: 15  }).notNull(),  city:             varchar(&apos;city&apos;,    { length: 60  }),  roomType:         roomTypeEnum(&apos;room_type&apos;).notNull(),  roomId:           text(&apos;room_id&apos;).references(() =&gt; rooms.id),  checkin:          date(&apos;checkin&apos;).notNull(),  checkout:         date(&apos;checkout&apos;).notNull(),  guests:           smallint(&apos;guests&apos;).notNull(),  mealPlan:         mealPlanEnum(&apos;meal_plan&apos;).notNull(),  requests:         text(&apos;requests&apos;),  source:           sourceEnum(&apos;source&apos;),  estimatedRevenue: integer(&apos;estimated_revenue&apos;),  status:           enquiryStatusEnum(&apos;status&apos;).notNull().default(&apos;new&apos;),  hostNotes:        text(&apos;host_notes&apos;),  ipHash:           varchar(&apos;ip_hash&apos;, { length: 64 }),  createdAt:        timestamp(&apos;created_at&apos;, { withTimezone: true }).notNull().defaultNow(),  updatedAt:        timestamp(&apos;updated_at&apos;, { withTimezone: true }).notNull().defaultNow(),  deletedAt:        timestamp(&apos;deleted_at&apos;, { withTimezone: true }),}, (t) =&gt; ({  emailIdx:    index(&apos;idx_enquiries_email&apos;).on(t.email),  checkinIdx:  index(&apos;idx_enquiries_checkin&apos;).on(t.checkin),  statusIdx:   index(&apos;idx_enquiries_status&apos;).on(t.status),  dedupIdx:    uniqueIndex(&apos;idx_enquiries_dedup&apos;).on(t.email, t.checkin),}))// ── rooms ────────────────────────────────────────────────────────────export const rooms = pgTable(&apos;rooms&apos;, {  id:          text(&apos;id&apos;).primaryKey().$defaultFn(() =&gt; &apos;room_&apos; + crypto.randomUUID().replace(/-/g,&apos;&apos;)),  slug:        varchar(&apos;slug&apos;, { length: 60 }).notNull().unique(),  name:        varchar(&apos;name&apos;, { length: 100 }).notNull(),  type:        roomTypeEnum(&apos;type&apos;).notNull(),  capacity:    smallint(&apos;capacity&apos;).notNull(),  description: text(&apos;description&apos;),  features:    text(&apos;features&apos;).array().notNull().default(sql`&apos;{}&apos;::text[]`),  priceBase:   integer(&apos;price_base&apos;).notNull(),  isActive:    boolean(&apos;is_active&apos;).notNull().default(true),  sortOrder:   smallint(&apos;sort_order&apos;).notNull().default(0),  createdAt:   timestamp(&apos;created_at&apos;, { withTimezone: true }).notNull().defaultNow(),  updatedAt:   timestamp(&apos;updated_at&apos;, { withTimezone: true }).notNull().defaultNow(),})// ── Type exports (used throughout application) ────────────────────export type Enquiry     = typeof enquiries.$inferSelectexport type NewEnquiry  = typeof enquiries.$inferInsertexport type Room        = typeof rooms.$inferSelect
+6. Migration Strategy
+6.1 Drizzle Kit Configuration
+// drizzle.config.tsimport type { Config } from &apos;drizzle-kit&apos;export default {  schema:  &apos;./src/db/schema.ts&apos;,  out:     &apos;./drizzle&apos;,            // migration files directory  driver:  &apos;pg&apos;,  dbCredentials: {    connectionString: process.env.DATABASE_URL!,  },  breakingChanges: false,          // Warn on destructive changes  verbose: true,} satisfies Config
+
+6.2 Migration Commands
+# Generate migration files from schema changespnpm drizzle-kit generate:pg# Review generated SQL before applyingcat drizzle/0001_*.sql# Apply migrations to NeonDBpnpm drizzle-kit push:pg# Open Drizzle Studio (visual DB browser)pnpm drizzle-kit studio
+
+6.3 Phase 2 Initial Migration — 0001_initial_schema.sql
+This is the first migration file that establishes the complete Phase 2 schema. Generated by Drizzle Kit from schema.ts.
+-- drizzle/0001_initial_schema.sql-- Generated by Drizzle Kit — do not edit manually-- Create enums first (must exist before tables reference them)CREATE TYPE &quot;room_type_enum&quot;         AS ENUM (&apos;duplex-triple&apos;,&apos;duplex-quad&apos;,&apos;private&apos;,&apos;dorm&apos;);CREATE TYPE &quot;meal_plan_enum&quot;         AS ENUM (&apos;room-only&apos;,&apos;cp-plan&apos;,&apos;full-board&apos;);CREATE TYPE &quot;source_enum&quot;            AS ENUM (&apos;instagram&apos;,&apos;google&apos;,&apos;friend&apos;,&apos;blog&apos;,&apos;ota&apos;,&apos;other&apos;);CREATE TYPE &quot;enquiry_status_enum&quot;    AS ENUM (&apos;new&apos;,&apos;contacted&apos;,&apos;confirmed&apos;,&apos;cancelled&apos;,&apos;completed&apos;);CREATE TYPE &quot;image_category_enum&quot;    AS ENUM (&apos;food&apos;,&apos;rooms-interior&apos;,&apos;rooms-lifestyle&apos;,&apos;exterior-drone&apos;,&apos;exterior-ground&apos;);CREATE TYPE &quot;testimonial_source_enum&quot; AS ENUM (&apos;direct&apos;,&apos;google&apos;,&apos;booking&apos;,&apos;instagram&apos;);CREATE TYPE &quot;admin_role_enum&quot;        AS ENUM (&apos;super_admin&apos;,&apos;host&apos;);CREATE TYPE &quot;rate_season_enum&quot;       AS ENUM (&apos;standard&apos;,&apos;peak&apos;,&apos;offseason&apos;);-- Create tables (rooms before enquiries for FK reference)CREATE TABLE rooms ( ... );   -- full DDL from Section 3.2CREATE TABLE enquiries ( ... ); -- full DDL from Section 3.1CREATE TABLE rate_configs ( ... );CREATE TABLE gallery_images ( ... );CREATE TABLE testimonials ( ... );CREATE TABLE admin_users ( ... );-- Create indexesCREATE INDEX idx_enquiries_email ON enquiries(email) WHERE deleted_at IS NULL;-- ... all indexes from Section 4-- updated_at auto-update triggerCREATE OR REPLACE FUNCTION update_updated_at()RETURNS TRIGGER AS $$BEGIN NEW.updated_at = now(); RETURN NEW; END;$$ LANGUAGE plpgsql;CREATE TRIGGER enquiries_updated_at BEFORE UPDATE ON enquiries  FOR EACH ROW EXECUTE FUNCTION update_updated_at();CREATE TRIGGER rooms_updated_at BEFORE UPDATE ON rooms  FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+7. Seed Data
+Seed data populates the database after initial migration. Run once in Phase 2 setup. File: src/db/seed.ts
+
+// src/db/seed.ts — run with: pnpm tsx src/db/seed.tsimport { db } from &apos;./index&apos;import { rooms, rate_configs, testimonials } from &apos;./schema&apos;async function seed() {  // ── Rooms ──────────────────────────────────────────────────────  await db.insert(rooms).values([    {      slug: &apos;duplex-cottage&apos;,      name: &apos;Duplex Cottage&apos;,      type: &apos;duplex-triple&apos;,      capacity: 3,      description: &apos;Skylight stargazing, infinite glass windows, cedar interiors.&apos;,      features: [&apos;Skylight roof&apos;,&apos;18-ft glass window&apos;,&apos;Low-sitting sun area&apos;,&apos;Cedar wood flooring&apos;],      priceBase: 4800,      sortOrder: 1,    },    {      slug: &apos;duplex-cottage-quad&apos;,      name: &apos;Duplex Cottage — Quad&apos;,      type: &apos;duplex-quad&apos;,      capacity: 4,      description: &apos;Same stunning duplex experience for groups of four.&apos;,      features: [&apos;Skylight roof&apos;,&apos;18-ft glass window&apos;,&apos;Cedar wood flooring&apos;],      priceBase: 6000,      sortOrder: 2,    },    {      slug: &apos;private-room&apos;,      name: &apos;Private Room&apos;,      type: &apos;private&apos;,      capacity: 2,      description: &apos;Cozy double-sharing rooms with valley views and sofa-cum-bed.&apos;,      features: [&apos;Valley view&apos;,&apos;Sofa-cum-bed&apos;,&apos;Cheerful decor&apos;,&apos;Snug blankets&apos;],      priceBase: 2000,      sortOrder: 3,    },    {      slug: &apos;unisex-dorm&apos;,      name: &apos;Unisex Dormitory&apos;,      type: &apos;dorm&apos;,      capacity: 6,      description: &apos;6-bed luxury wooden bunk dorm with attic library and mountain view.&apos;,      features: [&apos;Premium bunk beds&apos;,&apos;Attic library&apos;,&apos;Indoor games&apos;,&apos;Himalayan view&apos;],      priceBase: 700,      sortOrder: 4,    },  ]).onConflictDoNothing()  // ── Rate Configs (standard season, full year 2026) ────────────  await db.insert(rate_configs).values([    { roomType: &apos;duplex-triple&apos;, season: &apos;standard&apos;, priceRoomOnly: 4800, priceCpPerPerson: 1800, validFrom: &apos;2026-01-01&apos;, validTo: &apos;2026-12-31&apos; },    { roomType: &apos;duplex-quad&apos;,   season: &apos;standard&apos;, priceRoomOnly: 6000, priceCpPerPerson: 1750, validFrom: &apos;2026-01-01&apos;, validTo: &apos;2026-12-31&apos; },    { roomType: &apos;private&apos;,       season: &apos;standard&apos;, priceRoomOnly: 2000, priceCpPerPerson: 1300, validFrom: &apos;2026-01-01&apos;, validTo: &apos;2026-12-31&apos; },    { roomType: &apos;dorm&apos;,          season: &apos;standard&apos;, priceRoomOnly: 700,  priceCpPerPerson: 0,    validFrom: &apos;2026-01-01&apos;, validTo: &apos;2026-12-31&apos; },  ]).onConflictDoNothing()  console.log(&apos;Seed complete.&apos;)  process.exit(0)}seed().catch(e =&gt; { console.error(e); process.exit(1) })
+8. Common Drizzle Query Patterns
+These are the most-used query patterns in the application. All are type-safe and inferred from the Drizzle schema.
+
+8.1 Insert new enquiry (POST /api/contact)
+import { db } from &apos;@/db&apos;import { enquiries, type NewEnquiry } from &apos;@/db/schema&apos;import { calculateEstimate } from &apos;@/lib/pricing&apos;async function insertEnquiry(data: FormData, ipHash: string) {  const estimatedRevenue = calculateEstimate({    roomType: data.roomType, nights: data.nights,    guests:   data.guests,   mealPlan: data.mealPlan,  })  const newEnquiry: NewEnquiry = {    ...data,    estimatedRevenue: estimatedRevenue.min,    ipHash,    status: &apos;new&apos;,  }  const [inserted] = await db.insert(enquiries).values(newEnquiry).returning()  return inserted}
+
+8.2 List enquiries for admin dashboard
+import { db } from &apos;@/db&apos;import { enquiries } from &apos;@/db/schema&apos;import { eq, desc, gte, lte, like, and, isNull } from &apos;drizzle-orm&apos;async function listEnquiries({ page=1, limit=20, status, from, to, q }) {  const offset = (page - 1) * limit  const conditions = [isNull(enquiries.deletedAt)]  if (status &amp;&amp; status !== &apos;all&apos;) conditions.push(eq(enquiries.status, status))  if (from) conditions.push(gte(enquiries.checkin, from))  if (to)   conditions.push(lte(enquiries.checkin, to))  if (q)    conditions.push(like(enquiries.name, `%${q}%`))  const [data, [{ count }]] = await Promise.all([    db.select().from(enquiries)      .where(and(...conditions))      .orderBy(desc(enquiries.createdAt))      .limit(limit).offset(offset),    db.select({ count: sql&lt;number&gt;`count(*)` })      .from(enquiries).where(and(...conditions)),  ])  return { data, pagination: { page, limit, total: count, totalPages: Math.ceil(count/limit) } }}
+
+8.3 Get applicable rate for a checkin date
+import { db } from &apos;@/db&apos;import { rate_configs } from &apos;@/db/schema&apos;import { eq, lte, gte, and } from &apos;drizzle-orm&apos;async function getRate(roomType: RoomTypeEnum, checkinDate: string) {  const [rate] = await db    .select()    .from(rate_configs)    .where(and(      eq(rate_configs.roomType, roomType),      eq(rate_configs.isActive, true),      lte(rate_configs.validFrom, checkinDate),      gte(rate_configs.validTo,   checkinDate),    ))    .limit(1)  return rate ?? null}
+
+End of Database Schema Document
+Shasha: Paused Perfect  ·  DB Schema v1.0  ·  March 2026

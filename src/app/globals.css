@@ -1,52 +1,128 @@
 @import 'tailwindcss';
 
-*{
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  overflow-x: hidden;
+/* ── Shasha: Paused Perfect — Design Tokens ────────────────────────── */
+
+@theme {
+  /* ── Colors ── */
+  --color-forest: #2D6A4F;
+  --color-forest-light: #52B788;
+  --color-forest-dark: #1B4332;
+  --color-amber: #D4A853;
+  --color-amber-light: #E8C97A;
+  --color-warm-wood: #8B6914;
+  --color-parchment: #F5F3EE;
+  --color-parchment-dark: #EBE7DE;
+  --color-midnight: #1C1C1C;
+  --color-midnight-light: #2A2A2A;
+  --color-ivory: #FEFCF8;
+  --color-mist: #F0F4F1;
+
+  /* ── Font Families (set via next/font CSS variables) ── */
+  --font-display: var(--font-cormorant), 'Georgia', serif;
+  --font-editorial: var(--font-playfair), 'Georgia', serif;
+  --font-body: var(--font-dm-sans), 'Helvetica Neue', sans-serif;
+  --font-accent: var(--font-caveat), cursive;
+
+  /* ── Spacing Scale ── */
+  --spacing-section: 6rem;
+  --spacing-section-mobile: 3.5rem;
+
+  /* ── Border Radius ── */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-full: 9999px;
+
+  /* ── Shadows ── */
+  --shadow-soft: 0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04);
+  --shadow-card: 0 4px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-elevated: 0 20px 60px -12px rgba(0, 0, 0, 0.15);
+
+  /* ── Transitions ── */
+  --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-fast: 150ms;
+  --duration-normal: 300ms;
+  --duration-slow: 500ms;
 }
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* ── Base Styles ──────────────────────────────────────────────────── */
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body);
+  color: var(--color-midnight);
+  background-color: var(--color-parchment);
+  line-height: 1.7;
 }
 
-/* Screen reader only utility class for accessibility */
-.sr-only {
+/* ── Typography ──────────────────────────────────────────────────── */
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--color-forest-dark);
+}
+
+h4, h5, h6 {
+  font-family: var(--font-editorial);
+  line-height: 1.3;
+  color: var(--color-midnight);
+}
+
+/* ── Accent Quote Style ──────────────────────────────────────────── */
+
+.font-accent {
+  font-family: var(--font-accent);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-editorial {
+  font-family: var(--font-editorial);
+}
+
+/* ── Selection Color ──────────────────────────────────────────────── */
+
+::selection {
+  background-color: var(--color-forest-light);
+  color: white;
+}
+
+/* ── Scrollbar ───────────────────────────────────────────────────── */
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-parchment);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-forest-light);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-forest);
+}
+
+/* ── Grain Texture Overlay ────────────────────────────────────────── */
+
+.grain-overlay::after {
+  content: '';
   position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-/* Focus visible styles for better keyboard navigation */
-.focus-visible:focus-visible {
-  outline: 2px solid #22c55e;
-  outline-offset: 2px;
+  inset: 0;
+  opacity: 0.03;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
 }
