@@ -126,7 +126,7 @@ export default function MultiStepForm() {
         </p>
         <div className="mt-8">
           <a
-            href="https://wa.me/918899543976"
+            href="https://wa.me/918210134128"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 rounded-full bg-forest px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-300 hover:bg-forest-dark hover:shadow-md"
@@ -483,10 +483,10 @@ export default function MultiStepForm() {
                   Something went wrong. Please try again or contact us directly
                   at{' '}
                   <a
-                    href="tel:+918899543976"
+                    href="tel:+918210134128"
                     className="font-semibold underline"
                   >
-                    +91 8899543976
+                    +91 8210134128
                   </a>
                   .
                 </div>

@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Instagram, Phone, Mail, MapPin } from 'lucide-react'
+import { Instagram, Phone, Mail, MapPin, MessageCircle } from 'lucide-react'
 
 const quickLinks = [
   { href: '/about', label: 'About Us' },
@@ -60,11 +60,13 @@ export default function Footer() {
               </li>
               <li>
                 <a
-                  href="tel:+918899543976"
+                  href="https://wa.me/918210134128"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="flex items-center gap-3 text-sm text-white/60 hover:text-forest-light transition-colors"
                 >
-                  <Phone size={16} className="shrink-0" />
-                  +91 8899543976
+                  <MessageCircle size={16} className="shrink-0" />
+                  +91 8210134128
                 </a>
               </li>
               <li>

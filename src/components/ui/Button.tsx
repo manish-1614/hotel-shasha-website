@@ -48,6 +48,16 @@ export default function Button({
   const combinedClassName = `${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${className}`
 
   if (href) {
+    const isExternal = href.startsWith('http') || href.startsWith('tel:') || href.startsWith('mailto:')
+    
+    if (isExternal) {
+      return (
+        <a href={href} className={combinedClassName} target={href.startsWith('http') ? '_blank' : undefined} rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}>
+          {children}
+        </a>
+      )
+    }
+
     return (
       <Link href={href} className={combinedClassName}>
         {children}
