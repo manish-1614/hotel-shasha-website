@@ -11,6 +11,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/about',
     '/stay',
     '/gallery',
+    '/experiences',
     '/cuisine',
     '/rates',
     '/contact',

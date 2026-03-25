@@ -1,5 +1,4 @@
-'use client'
-
+import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import SectionHeading from '@/components/ui/SectionHeading'
@@ -8,7 +7,7 @@ import { rooms, formatPrice } from '@/data/rooms'
 
 export default function RoomsPreview() {
   return (
-    <section className="py-20 sm:py-28 bg-parchment">
+    <section className="py-20 sm:py-28 bg-parchment font-editorial italic">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <SectionHeading
           accent="Where You'll Stay"
@@ -23,12 +22,18 @@ export default function RoomsPreview() {
                 href={`/stay/${room.slug}`}
                 className="group block overflow-hidden rounded-xl shadow-card hover:shadow-elevated transition-all duration-500"
               >
-                {/* Image placeholder */}
+                {/* Image */}
                 <div
-                  className={`relative aspect-[4/3] bg-gradient-to-br ${room.gradient}`}
+                  className="relative aspect-4/3 overflow-hidden"
                 >
+                  <Image
+                    src={room.image}
+                    alt={room.name}
+                    fill
+                    className="object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
                   <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-all duration-500" />
-                  <div className="absolute bottom-4 left-4 bg-white/95 backdrop-blur-sm rounded-full px-3 py-1.5 shadow-sm">
+                  <div className="absolute bottom-4 left-4 bg-white/95 backdrop-blur-sm rounded-full px-3 py-1.5 shadow-sm z-10">
                     <span className="text-sm font-semibold text-forest">
                       From {formatPrice(room.variants[0].priceRoomOnly)}
                     </span>

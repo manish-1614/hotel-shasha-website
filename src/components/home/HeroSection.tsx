@@ -1,22 +1,48 @@
 'use client'
 
+import Image from 'next/image'
 import { motion } from 'framer-motion'
 import Button from '@/components/ui/Button'
 
 export default function HeroSection() {
   return (
     <section className="relative h-[100dvh] min-h-[600px] flex items-center justify-center overflow-hidden">
-      {/* Background Image Placeholder */}
-      <div className="absolute inset-0 bg-gradient-to-br from-forest-dark via-forest to-forest-light" />
+      {/* Background Image */}
+      <div className="absolute inset-0">
+        <Image
+          src="/hotel-shasha-website/images/exterior/mountain-hills-scenic-beauty-exterior.webp"
+          alt="Shasha Jibhi Exterior"
+          fill
+          priority
+          className="object-cover"
+          sizes="100vw"
+        />
+      </div>
 
       {/* Overlay gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/50" />
+      <div className="absolute inset-0 bg-linear-to-b from-black/60 via-black/20 to-black/70" />
 
       {/* Grain texture */}
       <div className="grain-overlay absolute inset-0" />
 
       {/* Content */}
       <div className="relative z-10 mx-auto max-w-5xl px-6 text-center">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="flex justify-center mb-8"
+        >
+          <Image
+            src="/hotel-shasha-website/images/ShashaLogo.webp"
+            alt="Shasha Logo"
+            width={180}
+            height={180}
+            priority
+            className="drop-shadow-2xl"
+          />
+        </motion.div>
+
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -33,7 +59,7 @@ export default function HeroSection() {
           className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-white leading-[0.95] tracking-tight"
         >
           Shasha
-          <span className="block text-amber-light mt-2">Paused Perfect</span>
+          <span className="block text-amber-light mt-2 text-4xl sm:text-5xl md:text-6xl">Paused Perfect</span>
         </motion.h1>
 
         <motion.p

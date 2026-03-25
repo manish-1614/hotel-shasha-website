@@ -22,6 +22,9 @@ export const metadata: Metadata = {
     'Tirthan Valley',
   ],
   authors: [{ name: 'Shasha Jibhi' }],
+  icons: {
+    icon: '/hotel-shasha-website/favicon.ico',
+  },
   openGraph: {
     type: 'website',
     locale: 'en_IN',

@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import type { Metadata } from 'next'
 import { UtensilsCrossed, Flame, Leaf, Coffee } from 'lucide-react'
 import { cuisinePhilosophy, dishes, mealPlans } from '@/data/cuisine'
@@ -22,14 +23,21 @@ export default function CuisinePage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative py-32 sm:py-40 bg-gradient-to-br from-warm-wood via-amber to-amber-light overflow-hidden grain-overlay">
-        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/30" />
+      <section className="relative py-32 sm:py-40 bg-warm-wood overflow-hidden">
+        <Image
+          src="/hotel-shasha-website/images/food/indian-homestay-food.webp"
+          alt="Shasha Cuisine"
+          fill
+          className="object-cover opacity-60"
+          priority
+        />
+        <div className="absolute inset-0 bg-linear-to-b from-black/40 to-black/20" />
         <div className="relative z-10 mx-auto max-w-4xl px-6 text-center">
           <ScrollReveal>
-            <span className="font-accent text-xl text-white/80 block mb-3">
+            <span className="font-accent text-xl text-white block mb-3">
               {cuisinePhilosophy.subtitle}
             </span>
-            <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-white">
+            <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-white uppercase tracking-wider">
               {cuisinePhilosophy.title}
             </h1>
           </ScrollReveal>
@@ -40,7 +48,7 @@ export default function CuisinePage() {
       <section className="py-20 sm:py-28 bg-parchment">
         <div className="mx-auto max-w-4xl px-6 lg:px-8">
           <ScrollReveal>
-            <div className="space-y-5 text-midnight/70 leading-relaxed text-lg">
+            <div className="space-y-5 text-midnight/70 leading-relaxed text-lg italic font-editorial">
               {cuisinePhilosophy.description.map((p, i) => (
                 <p key={i}>{p}</p>
               ))}
@@ -76,11 +84,14 @@ export default function CuisinePage() {
               <ScrollReveal key={dish.name} delay={i * 0.06}>
                 <div className="group rounded-xl overflow-hidden shadow-soft hover:shadow-card transition-all duration-300 bg-white">
                   <div
-                    className={`aspect-square bg-gradient-to-br ${dish.gradient} flex items-center justify-center`}
+                    className="aspect-square relative flex items-center justify-center overflow-hidden"
                   >
-                    <span className="font-accent text-xl text-forest/20 group-hover:text-forest/30 transition-colors">
-                      {dish.name}
-                    </span>
+                    <Image
+                      src={dish.image}
+                      alt={dish.name}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
                   </div>
                   <div className="p-4">
                     <div className="flex items-center justify-between mb-1">

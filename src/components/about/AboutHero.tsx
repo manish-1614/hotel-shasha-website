@@ -1,10 +1,17 @@
-'use client'
-
+import Image from 'next/image'
 import { motion } from 'framer-motion'
 
 export default function AboutHero() {
   return (
-    <section className="relative pt-32 pb-20 sm:pt-40 sm:pb-28 bg-gradient-to-b from-forest-dark to-forest overflow-hidden">
+    <section className="relative pt-32 pb-20 sm:pt-40 sm:pb-28 bg-forest overflow-hidden">
+      <Image
+        src="/hotel-shasha-website/images/exterior/mountain-homestay-exterior-garden.webp"
+        alt="Shasha Around Nature"
+        fill
+        className="object-cover opacity-50"
+        priority
+      />
+      <div className="absolute inset-0 bg-linear-to-b from-black/60 to-black/20" />
       <div className="grain-overlay absolute inset-0" />
 
       <div className="relative z-10 mx-auto max-w-4xl px-6 lg:px-8 text-center">

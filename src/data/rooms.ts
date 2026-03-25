@@ -15,6 +15,8 @@ export interface Room {
   features: string[]
   variants: RoomVariant[]
   gradient: string
+  image: string
+  gallery: string[]
 }
 
 export const rooms: Room[] = [
@@ -53,6 +55,15 @@ export const rooms: Room[] = [
       },
     ],
     gradient: 'from-forest-dark to-forest',
+    image: '/hotel-shasha-website/images/room/cozy-wooden-homestay-room.webp',
+    gallery: [
+      '/hotel-shasha-website/images/room/cozy-wooden-homestay-room.webp',
+      '/hotel-shasha-website/images/room/cozy-window-forest-view.webp',
+      '/hotel-shasha-website/images/room/cozy-wooden-bedroom-view.webp',
+      '/hotel-shasha-website/images/bathroom/homestay-bathroom-interior.webp',
+      '/hotel-shasha-website/images/bathroom/homestay-washroom-area.webp',
+      '/hotel-shasha-website/images/exterior/mountain-scenic-beauty-exterior-village.webp',
+    ],
   },
   {
     slug: 'private-rooms',
@@ -83,6 +94,15 @@ export const rooms: Room[] = [
       },
     ],
     gradient: 'from-warm-wood to-amber',
+    image: '/hotel-shasha-website/images/room/cozy-double-bedroom.webp',
+    gallery: [
+      '/hotel-shasha-website/images/room/cozy-double-bedroom.webp',
+      '/hotel-shasha-website/images/room/homestay-double-bedroom.webp',
+      '/hotel-shasha-website/images/room/cozy-rustic-homestay-bedroom.webp',
+      '/hotel-shasha-website/images/bathroom/homestay-bathroom-shower-toilet.webp',
+      '/hotel-shasha-website/images/room/cozy-window-seat-nature.webp',
+      '/hotel-shasha-website/images/room/wooden-homestay-staircase.webp',
+    ],
   },
   {
     slug: 'dorm',
@@ -113,6 +133,15 @@ export const rooms: Room[] = [
       },
     ],
     gradient: 'from-forest to-forest-light',
+    image: '/hotel-shasha-website/images/room/wooden-bunk-beds-room.webp',
+    gallery: [
+      '/hotel-shasha-website/images/room/wooden-bunk-beds-room.webp',
+      '/hotel-shasha-website/images/room/wooden-bunk-bed-dorm-room.webp',
+      '/hotel-shasha-website/images/room/homestay-common-lounge-room.webp',
+      '/hotel-shasha-website/images/room/traditional-homestay-lounge.webp',
+      '/hotel-shasha-website/images/room/wooden-loft-bedroom.webp',
+      '/hotel-shasha-website/images/room/homestay-kitchen-interior.webp',
+    ],
   },
 ]
 

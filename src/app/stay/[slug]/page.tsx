@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { Users, Check } from 'lucide-react'
@@ -31,19 +32,24 @@ export default async function RoomDetailPage({ params }: Props) {
   return (
     <>
       {/* Hero */}
-      <section
-        className={`relative py-32 sm:py-44 bg-gradient-to-br ${room.gradient} overflow-hidden grain-overlay`}
-      >
-        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/40" />
+      <section className="relative py-32 sm:py-44 bg-forest-dark overflow-hidden font-display">
+        <Image
+          src={room.image}
+          alt={room.name}
+          fill
+          className="object-cover opacity-60"
+          priority
+        />
+        <div className="absolute inset-0 bg-linear-to-b from-black/60 to-black/30" />
         <div className="relative z-10 mx-auto max-w-4xl px-6 text-center">
           <ScrollReveal>
             <span className="font-accent text-xl text-amber-light block mb-3">
               {room.tagline}
             </span>
-            <h1 className="font-display text-4xl sm:text-5xl lg:text-7xl font-bold text-white">
+            <h1 className="font-display text-4xl sm:text-5xl lg:text-7xl font-bold text-white uppercase tracking-wider">
               {room.name}
             </h1>
-            <p className="mt-6 text-lg text-white/70 max-w-2xl mx-auto leading-relaxed">
+            <p className="mt-6 text-lg text-white/90 max-w-2xl mx-auto leading-relaxed">
               {room.description}
             </p>
           </ScrollReveal>
@@ -54,7 +60,7 @@ export default async function RoomDetailPage({ params }: Props) {
       <section className="py-20 sm:py-28 bg-parchment">
         <div className="mx-auto max-w-4xl px-6 lg:px-8">
           <ScrollReveal>
-            <div className="space-y-5 text-midnight/70 leading-relaxed text-lg">
+            <div className="space-y-5 text-midnight/70 leading-relaxed text-lg font-editorial italic underline-offset-4 decoration-amber/30 decoration-1">
               {room.longDescription.map((paragraph, i) => (
                 <p key={i}>{paragraph}</p>
               ))}
@@ -133,25 +139,27 @@ export default async function RoomDetailPage({ params }: Props) {
         </div>
       </section>
 
-      {/* Image Grid Placeholder */}
+      {/* Gallery */}
       <section className="py-20 sm:py-28 bg-parchment">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <ScrollReveal>
-            <h2 className="font-display text-3xl sm:text-4xl font-bold text-forest-dark text-center mb-12">
+            <h2 className="font-display text-3xl sm:text-4xl font-bold text-forest-dark text-center mb-12 uppercase tracking-widest">
               Gallery
             </h2>
           </ScrollReveal>
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
-            {Array.from({ length: 6 }).map((_, i) => (
+            {room.gallery.map((img, i) => (
               <ScrollReveal key={i} delay={i * 0.08}>
                 <div
-                  className={`aspect-[4/3] rounded-xl bg-gradient-to-br ${room.gradient} opacity-${70 + i * 5} overflow-hidden shadow-soft`}
+                  className="aspect-4/3 rounded-xl relative overflow-hidden shadow-soft group"
                 >
-                  <div className="h-full w-full flex items-center justify-center">
-                    <span className="font-accent text-lg text-white/15">
-                      {room.name} — Photo {i + 1}
-                    </span>
-                  </div>
+                  <Image
+                    src={img}
+                    alt={`${room.name} — Photo ${i + 1}`}
+                    fill
+                    className="object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500" />
                 </div>
               </ScrollReveal>
             ))}

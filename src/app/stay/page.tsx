@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import type { Metadata } from 'next'
 import { ArrowRight, Users, Star } from 'lucide-react'
 import { rooms, formatPrice } from '@/data/rooms'
@@ -15,7 +16,15 @@ export default function StayPage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative py-32 sm:py-40 bg-gradient-to-br from-forest-dark via-forest to-forest-light overflow-hidden grain-overlay">
+      <section className="relative py-32 sm:py-40 bg-forest overflow-hidden">
+        <Image
+          src="/hotel-shasha-website/images/exterior/mountain-homestay-outdoor-area.webp"
+          alt="Shasha Accommodations"
+          fill
+          className="object-cover opacity-60"
+          priority
+        />
+        <div className="absolute inset-0 bg-linear-to-b from-black/40 to-black/20" />
         <div className="relative z-10 mx-auto max-w-4xl px-6 text-center">
           <ScrollReveal>
             <span className="font-accent text-xl text-amber-light block mb-3">
@@ -24,7 +33,7 @@ export default function StayPage() {
             <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-white">
               Our Accommodations
             </h1>
-            <p className="mt-6 text-lg text-white/70 max-w-2xl mx-auto leading-relaxed">
+            <p className="mt-6 text-lg text-white/90 max-w-2xl mx-auto leading-relaxed">
               Three distinct ways to experience Shasha — each crafted with care,
               cedar, and a quiet sense of belonging.
             </p>
@@ -49,13 +58,15 @@ export default function StayPage() {
                     className={`${i % 2 === 1 ? 'lg:order-2' : ''}`}
                   >
                     <div
-                      className={`relative aspect-[4/3] rounded-2xl bg-gradient-to-br ${room.gradient} overflow-hidden shadow-card`}
+                      className="relative aspect-4/3 rounded-2xl overflow-hidden shadow-card group"
                     >
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="font-accent text-3xl text-white/20">
-                          {room.name}
-                        </span>
-                      </div>
+                      <Image
+                        src={room.image}
+                        alt={room.name}
+                        fill
+                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500" />
                     </div>
                   </div>
 

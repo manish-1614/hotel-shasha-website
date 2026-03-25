@@ -3,6 +3,7 @@ export interface Dish {
   description: string
   category: string
   gradient: string
+  image: string
 }
 
 export interface MealPlan {
@@ -27,48 +28,56 @@ export const dishes: Dish[] = [
     description: 'Artisan dough, mountain herbs, local cheese',
     category: 'International',
     gradient: 'from-amber/30 to-warm-wood/20',
+    image: '/hotel-shasha-website/images/food/homestay-pizza-dinner.webp',
   },
   {
     name: 'Himachali Siddu',
     description: 'Steamed bread stuffed with walnut & poppy seeds',
     category: 'Local',
     gradient: 'from-forest/20 to-forest-light/20',
+    image: '/hotel-shasha-website/images/food/indian-homestay-food-spread.webp',
   },
   {
     name: 'Pasta Arrabbiata',
     description: 'Hand-rolled pasta with spicy tomato sauce',
     category: 'International',
     gradient: 'from-amber/20 to-amber-light/20',
+    image: '/hotel-shasha-website/images/food/homestay-vegetable-pasta-meal.webp',
   },
   {
     name: 'Dal Chawal & Sabzi',
     description: 'Comfort food done right, every single day',
     category: 'Indian',
     gradient: 'from-warm-wood/20 to-amber/20',
+    image: '/hotel-shasha-website/images/food/dal-makhani-paratha-meal.webp',
   },
   {
     name: 'Trout Fry',
     description: 'Fresh Tirthan River trout with valley spices',
     category: 'Local',
     gradient: 'from-forest/20 to-amber/20',
+    image: '/hotel-shasha-website/images/food/creamy-indian-curry-dish.webp',
   },
   {
     name: 'Pancake Stack',
     description: 'Fluffy pancakes with maple syrup & mountain honey',
     category: 'Breakfast',
     gradient: 'from-amber-light/20 to-parchment-dark/30',
+    image: '/hotel-shasha-website/images/food/outdoor-breakfast-coffee-croissants.webp',
   },
   {
     name: 'Chai & Pakoras',
     description: 'Rainy-day essential — masala chai with crispy fritters',
     category: 'Indian',
     gradient: 'from-warm-wood/30 to-forest/10',
+    image: '/hotel-shasha-website/images/food/indian-breakfast-outdoor-meal.webp',
   },
   {
     name: 'Bonfire BBQ',
     description: 'Grilled meats & veggies under the stars',
     category: 'Specials',
     gradient: 'from-midnight/20 to-forest-dark/20',
+    image: '/hotel-shasha-website/images/food/chicken-biryani-meal.webp',
   },
 ]
 
