@@ -10,7 +10,7 @@ export default function HeroSection() {
       {/* Background Image */}
       <div className="absolute inset-0">
         <Image
-          src="/hotel-shasha-website/images/exterior/mountain-hills-scenic-beauty-exterior.webp"
+          src="/images/exterior/mountain-hills-scenic-beauty-exterior.webp"
           alt="Shasha Jibhi Exterior"
           fill
           priority
@@ -34,7 +34,7 @@ export default function HeroSection() {
           className="flex justify-center mb-8"
         >
           <Image
-            src="/hotel-shasha-website/images/ShashaLogo.webp"
+            src="/images/ShashaLogo1.webp"
             alt="Shasha Logo"
             width={180}
             height={180}
