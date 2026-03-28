@@ -25,7 +25,7 @@ export default function CuisinePage() {
       {/* Hero */}
       <section className="relative py-32 sm:py-40 bg-warm-wood overflow-hidden">
         <Image
-          src="/images/food/indian-homestay-food.webp"
+          src="/hotel-shasha-website/images/food/indian-homestay-food.webp"
           alt="Shasha Cuisine"
           fill
           className="object-cover opacity-60"

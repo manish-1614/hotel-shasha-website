@@ -46,7 +46,7 @@ export default function BonfireEthos() {
           <ScrollReveal delay={0.2}>
             <div className="aspect-square rounded-2xl relative overflow-hidden shadow-elevated group">
               <Image
-                src="/images/amenities/outdoor-pergola-forest-seating.webp"
+                src="/hotel-shasha-website/images/amenities/outdoor-pergola-forest-seating.webp"
                 alt="Shasha Bonfire Area"
                 fill
                 className="object-cover transition-transform duration-700 group-hover:scale-105"

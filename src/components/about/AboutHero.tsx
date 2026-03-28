@@ -7,7 +7,7 @@ export default function AboutHero() {
   return (
     <section className="relative pt-32 pb-20 sm:pt-40 sm:pb-28 bg-forest overflow-hidden">
       <Image
-        src="/images/exterior/mountain-homestay-exterior-garden.webp"
+        src="/hotel-shasha-website/images/exterior/mountain-homestay-exterior-garden.webp"
         alt="Shasha Around Nature"
         fill
         className="object-cover opacity-50"

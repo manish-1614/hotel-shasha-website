@@ -18,7 +18,7 @@ export default function StayPage() {
       {/* Hero */}
       <section className="relative py-32 sm:py-40 bg-forest overflow-hidden">
         <Image
-          src="/images/exterior/mountain-homestay-outdoor-area.webp"
+          src="/hotel-shasha-website/images/exterior/mountain-homestay-outdoor-area.webp"
           alt="Shasha Accommodations"
           fill
           className="object-cover opacity-60"
