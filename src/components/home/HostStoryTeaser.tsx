@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import ScrollReveal from '@/components/ui/ScrollReveal'
 import Button from '@/components/ui/Button'
 
@@ -10,12 +11,15 @@ export default function HostStoryTeaser() {
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 items-center">
           {/* Image */}
           <ScrollReveal direction="left" className="lg:col-span-2">
-            <div className="aspect-[3/4] rounded-2xl bg-gradient-to-br from-forest/20 to-amber/20 overflow-hidden shadow-card">
-              <div className="h-full w-full flex items-center justify-center">
-                <span className="font-accent text-4xl text-forest/30">
-                  The Brothers
-                </span>
-              </div>
+            <div className="relative aspect-[3/4] rounded-2xl overflow-hidden shadow-card group">
+              <Image
+                src="/hotel-shasha-website/images/brothers-1.webp"
+                alt="The Brothers — Manish and his brother"
+                fill
+                className="object-cover transition-transform duration-700 group-hover:scale-110"
+                sizes="(max-width: 1024px) 100vw, 40vw"
+              />
+              <div className="absolute inset-0 bg-linear-to-t from-forest-dark/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             </div>
           </ScrollReveal>
 

@@ -12,9 +12,9 @@ const lodgingBusinessSchema = {
   name: 'Shasha Jibhi',
   description:
     'A boutique homestay in Jibhi, Himachal Pradesh — where time slows down. Skylight duplex cottage, global cuisine, mountain dorm, and valley-view private rooms nestled in cedar forests.',
-  url: 'https://www.shashajibhi.com',
+  url: 'https://www.shashajibhi.in',
   telephone: ['+918899543976', '+919534139998'],
-  email: 'stay@shashajibhi.com',
+  email: 'stay@shashajibhi.in',
   address: {
     '@type': 'PostalAddress',
     streetAddress: 'Shasha, Jibhi, Banjar',

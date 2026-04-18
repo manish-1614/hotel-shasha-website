@@ -23,7 +23,11 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: 'Shasha Jibhi' }],
   icons: {
-    icon: '/favicon.ico',
+    icon: [
+      { url: '/hotel-shasha-website/favicon.ico', sizes: 'any' },
+    ],
+    apple: '/hotel-shasha-website/favicon.ico',
+    shortcut: '/hotel-shasha-website/favicon.ico',
   },
   openGraph: {
     type: 'website',

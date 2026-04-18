@@ -27,7 +27,7 @@ export default function ExperiencesPage() {
       {/* Hero */}
       <section className="relative py-32 sm:py-40 bg-forest-dark overflow-hidden">
         <Image
-          src="/hotel-shasha-website/images/exterior/mountain-scenic-beauty-exterior-village.webp"
+          src="/hotel-shasha-website/images/exterior/mountain-homestay-exterior-desktop.webp"
           alt="Shasha Experiences"
           fill
           className="object-cover opacity-50"

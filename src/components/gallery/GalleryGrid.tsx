@@ -2,7 +2,8 @@
 
 import { useState, useCallback, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, ChevronLeft, ChevronRight, ImageIcon } from 'lucide-react'
+import Image from 'next/image'
+import { X, ChevronLeft, ChevronRight } from 'lucide-react'
 import {
   galleryImages,
   galleryCategories,
@@ -125,14 +126,16 @@ export default function GalleryGrid() {
               onClick={(e) => e.stopPropagation()}
             >
               <div
-                className={`relative w-full ${aspectMap[filtered[lightbox].aspectRatio]} bg-gradient-to-br ${filtered[lightbox].gradient} rounded-xl overflow-hidden`}
+                className={`relative w-full ${aspectMap[filtered[lightbox].aspectRatio]} rounded-xl overflow-hidden`}
               >
-                <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-white/20">
-                  <ImageIcon size={48} strokeWidth={1} />
-                  <span className="font-accent text-xl">
-                    {filtered[lightbox].alt}
-                  </span>
-                </div>
+                <Image
+                  src={filtered[lightbox].srcLightbox}
+                  alt={filtered[lightbox].alt}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 1200px) 100vw, 1200px"
+                  priority
+                />
               </div>
               <p className="text-center text-white/60 text-sm mt-4">
                 {filtered[lightbox].alt}
@@ -179,11 +182,18 @@ function GalleryItem({
     >
       <button
         onClick={onClick}
-        className={`relative w-full ${aspectMap[image.aspectRatio]} bg-gradient-to-br ${image.gradient} rounded-xl overflow-hidden shadow-soft hover:shadow-card transition-all duration-300 group cursor-pointer`}
+        className={`relative w-full ${aspectMap[image.aspectRatio]} rounded-xl overflow-hidden shadow-soft hover:shadow-card transition-all duration-300 group cursor-pointer`}
       >
-        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300" />
-        <div className="absolute inset-0 flex items-center justify-center text-forest/15 group-hover:text-forest/25 transition-colors">
-          <span className="font-accent text-sm sm:text-base text-center px-4">
+        <Image
+          src={image.src}
+          alt={image.alt}
+          fill
+          className="object-cover transition-transform duration-500 group-hover:scale-110"
+          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+        />
+        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300" />
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <span className="font-accent text-white text-sm sm:text-base text-center px-4 drop-shadow-md">
             {image.alt}
           </span>
         </div>
