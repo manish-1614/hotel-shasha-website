@@ -33,13 +33,13 @@ export default function ExperiencesPage() {
           className="object-cover opacity-50"
           priority
         />
-        <div className="absolute inset-0 bg-linear-to-b from-black/60 to-black/30" />
+        <div className="absolute inset-0 bg-linear-to-b from-black/75 via-black/45 to-black/80" />
         <div className="relative z-10 mx-auto max-w-4xl px-6 text-center">
           <ScrollReveal>
             <span className="font-accent text-xl text-amber-light block mb-3">
               Beyond the Bed
             </span>
-            <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight">
+            <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight text-shadow-hero">
               Crafted Himalayan
               <span className="block text-amber-light">Experiences</span>
             </h1>

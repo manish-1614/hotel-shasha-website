@@ -43,10 +43,14 @@ export default function Navbar() {
         <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8">
           {/* Logo */}
           <Link href="/" className="group flex items-center gap-2">
-            <span className="font-display text-2xl font-bold tracking-tight text-forest-dark transition-colors group-hover:text-forest">
+            <span className={`font-display text-2xl font-bold tracking-tight transition-colors ${
+              scrolled ? 'text-forest-dark group-hover:text-forest' : 'text-white group-hover:text-white/80'
+            }`}>
               Shasha
             </span>
-            <span className="font-accent text-lg text-amber hidden sm:inline">
+            <span className={`font-accent text-lg hidden sm:inline ${
+              scrolled ? 'text-amber' : 'text-amber-light'
+            }`}>
               Paused Perfect
             </span>
           </Link>
@@ -57,7 +61,11 @@ export default function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-sm font-medium text-midnight/70 transition-colors hover:text-forest relative after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:w-0 after:bg-forest-light after:transition-all after:duration-300 hover:after:w-full"
+                className={`text-sm font-medium transition-colors relative after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:w-0 after:transition-all after:duration-300 hover:after:w-full ${
+                  scrolled 
+                    ? 'text-midnight/70 hover:text-forest after:bg-forest-light' 
+                    : 'text-white/90 hover:text-white after:bg-white'
+                }`}
               >
                 {link.label}
               </Link>
@@ -76,7 +84,9 @@ export default function Navbar() {
             {/* Mobile hamburger */}
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="lg:hidden p-2 text-midnight/70 hover:text-forest transition-colors"
+              className={`lg:hidden p-2 transition-colors ${
+                scrolled ? 'text-midnight/70 hover:text-forest' : 'text-white hover:text-white/80'
+              }`}
               aria-label="Toggle menu"
             >
               {mobileOpen ? <X size={24} /> : <Menu size={24} />}

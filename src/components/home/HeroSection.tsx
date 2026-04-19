@@ -20,7 +20,7 @@ export default function HeroSection() {
       </div>
 
       {/* Overlay gradient */}
-      <div className="absolute inset-0 bg-linear-to-b from-black/60 via-black/20 to-black/70" />
+      <div className="absolute inset-0 bg-linear-to-b from-black/70 via-black/35 to-black/75" />
 
       {/* Grain texture */}
       <div className="grain-overlay absolute inset-0" />
@@ -56,7 +56,7 @@ export default function HeroSection() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
-          className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-white leading-[0.95] tracking-tight"
+          className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-white leading-[0.95] tracking-tight text-shadow-hero"
         >
           Shasha
           <span className="block text-amber-light mt-2 text-4xl sm:text-5xl md:text-6xl">Paused Perfect</span>
@@ -81,8 +81,8 @@ export default function HeroSection() {
           <Button href="/contact" size="lg">
             Plan Your Stay
           </Button>
-          <Button href="/stay" variant="outline" size="lg" className="border-white/30 text-white hover:bg-white/10 hover:text-white hover:border-white/50">
-            Explore Rooms
+          <Button href="/about" variant="outline" size="lg" className="border-white/30 text-white hover:bg-white/10 hover:text-white hover:border-white/50">
+            Meet your hosts
           </Button>
         </motion.div>
       </div>

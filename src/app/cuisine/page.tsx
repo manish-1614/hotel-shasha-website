@@ -31,13 +31,13 @@ export default function CuisinePage() {
           className="object-cover opacity-60"
           priority
         />
-        <div className="absolute inset-0 bg-linear-to-b from-black/40 to-black/20" />
+        <div className="absolute inset-0 bg-linear-to-b from-black/70 via-black/35 to-black/75" />
         <div className="relative z-10 mx-auto max-w-4xl px-6 text-center">
           <ScrollReveal>
             <span className="font-accent text-xl text-white block mb-3">
               {cuisinePhilosophy.subtitle}
             </span>
-            <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-white uppercase tracking-wider">
+            <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-white uppercase tracking-wider text-shadow-hero">
               {cuisinePhilosophy.title}
             </h1>
           </ScrollReveal>

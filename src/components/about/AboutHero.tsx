@@ -13,7 +13,7 @@ export default function AboutHero() {
         className="object-cover opacity-50"
         priority
       />
-      <div className="absolute inset-0 bg-linear-to-b from-black/60 to-black/20" />
+      <div className="absolute inset-0 bg-linear-to-b from-black/70 via-black/35 to-black/75" />
       <div className="grain-overlay absolute inset-0" />
 
       <div className="relative z-10 mx-auto max-w-4xl px-6 lg:px-8 text-center">
@@ -30,7 +30,7 @@ export default function AboutHero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight"
+          className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight text-shadow-hero"
         >
           Two Brothers, One Home,
           <span className="block text-amber-light">Endless Stories</span>

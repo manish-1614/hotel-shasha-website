@@ -55,9 +55,9 @@ export const rooms: Room[] = [
       },
     ],
     gradient: 'from-forest-dark to-forest',
-    image: '/hotel-shasha-website/images/room/cozy-wooden-homestay-room-desktop.webp',
+    image: '/hotel-shasha-website/images/room/rustic-wooden-bedroom-homestay-desktop.webp',
     gallery: [
-      '/hotel-shasha-website/images/room/cozy-wooden-homestay-room-desktop.webp',
+      '/hotel-shasha-website/images/room/rustic-wooden-bedroom-homestay-desktop.webp',
       '/hotel-shasha-website/images/room/cozy-wooden-room-forest-view-desktop.webp',
       '/hotel-shasha-website/images/room/cozy-homestay-window-view-desktop.webp',
       '/hotel-shasha-website/images/bathroom/homestay-bathroom-interior-desktop.webp',
@@ -94,9 +94,9 @@ export const rooms: Room[] = [
       },
     ],
     gradient: 'from-warm-wood to-amber',
-    image: '/hotel-shasha-website/images/room/rustic-wooden-bedroom-homestay-desktop.webp',
+    image: '/hotel-shasha-website/images/room/cozy-wooden-homestay-room-desktop.webp',
     gallery: [
-      '/hotel-shasha-website/images/room/rustic-wooden-bedroom-homestay-desktop.webp',
+      '/hotel-shasha-website/images/room/cozy-wooden-homestay-room-desktop.webp',
       '/hotel-shasha-website/images/room/homestay-bedroom-forest-view-desktop.webp',
       '/hotel-shasha-website/images/room/rustic-room-interior-desktop.webp',
       '/hotel-shasha-website/images/bathroom/bathroom-western-toilet-shower-desktop.webp',

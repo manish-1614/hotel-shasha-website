@@ -24,13 +24,13 @@ export default function StayPage() {
           className="object-cover opacity-60"
           priority
         />
-        <div className="absolute inset-0 bg-linear-to-b from-black/40 to-black/20" />
+        <div className="absolute inset-0 bg-linear-to-b from-black/70 via-black/35 to-black/75" />
         <div className="relative z-10 mx-auto max-w-4xl px-6 text-center">
           <ScrollReveal>
             <span className="font-accent text-xl text-amber-light block mb-3">
               Where You&apos;ll Stay
             </span>
-            <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-white">
+            <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-white text-shadow-hero">
               Our Accommodations
             </h1>
             <p className="mt-6 text-lg text-white/90 max-w-2xl mx-auto leading-relaxed">
