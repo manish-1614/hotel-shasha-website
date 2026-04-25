@@ -56,7 +56,7 @@ export default function HeroSection() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
-          className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-white leading-[0.95] tracking-tight text-shadow-hero"
+          className="font-mont text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-white leading-[0.95] tracking-tight text-shadow-hero"
         >
           Shasha
           <span className="block text-amber-light mt-2 text-4xl sm:text-5xl md:text-6xl">Paused Perfect</span>
