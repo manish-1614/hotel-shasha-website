@@ -13,7 +13,7 @@ export default function HostStoryTeaser() {
           <ScrollReveal direction="left" className="lg:col-span-2">
             <div className="relative aspect-[3/4] rounded-2xl overflow-hidden shadow-card group">
               <Image
-                src="/hotel-shasha-website/images/brothers-1.webp"
+                src="/images/brothers-1.webp"
                 alt="The Brothers — Manish and his brother"
                 fill
                 className="object-cover transition-transform duration-700 group-hover:scale-110"

@@ -24,10 +24,10 @@ export const metadata: Metadata = {
   authors: [{ name: 'Shasha Jibhi' }],
   icons: {
     icon: [
-      { url: '/hotel-shasha-website/favicon.ico', sizes: 'any' },
+      { url: '/favicon.ico', sizes: 'any' },
     ],
-    apple: '/hotel-shasha-website/favicon.ico',
-    shortcut: '/hotel-shasha-website/favicon.ico',
+    apple: '/favicon.ico',
+    shortcut: '/favicon.ico',
   },
   openGraph: {
     type: 'website',
