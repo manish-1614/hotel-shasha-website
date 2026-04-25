@@ -2,8 +2,9 @@ import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
   output: 'export',
-  // Change to your repo name if deploying to GitHub Pages without a custom domain
-  basePath: '/hotel-shasha-website',
+  // basePath is NOT needed when using a custom domain (CNAME).
+  // Only set this if deploying to GitHub Pages WITHOUT a custom domain (e.g. username.github.io/hotel-shasha-website)
+  // basePath: '/hotel-shasha-website',
   images: {
     unoptimized: true,
     remotePatterns: [
