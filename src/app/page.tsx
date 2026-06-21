@@ -28,7 +28,7 @@ const lodgingBusinessSchema = {
     latitude: 31.5368,
     longitude: 77.3455,
   },
-  priceRange: '₹700 - ₹6,000',
+  priceRange: '₹800 - ₹6,500',
   starRating: { '@type': 'Rating', ratingValue: '5' },
   amenityFeature: [
     { '@type': 'LocationFeatureSpecification', name: 'Free Wi-Fi' },

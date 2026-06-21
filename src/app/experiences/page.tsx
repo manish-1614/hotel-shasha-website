@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import type { Metadata } from 'next'
-import { Trees, Coffee, Flame, Mountain, Waves, Utensils } from 'lucide-react'
+import { LucideIcon, Trees, Coffee, Flame, Mountain, Waves, Utensils } from 'lucide-react'
 import { experiences } from '@/data/experiences'
 import ScrollReveal from '@/components/ui/ScrollReveal'
 import SectionHeading from '@/components/ui/SectionHeading'
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     'Beyond just a stay — experience mountain life with guided treks, riverside picnics, bonfire conversations, and global-local fusion cuisine at Shasha Jibhi.',
 }
 
-const iconMap: Record<string, any> = {
+const iconMap: Record<string, LucideIcon> = {
   Trees,
   Coffee,
   Flame,

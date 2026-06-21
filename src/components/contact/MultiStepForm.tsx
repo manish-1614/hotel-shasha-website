@@ -24,10 +24,10 @@ const slideVariants = {
 }
 
 const priceMap: Record<string, number> = {
-  'duplex-triple': 4800,
-  'duplex-quad': 6000,
-  private: 2000,
-  dorm: 700,
+  'duplex-triple': 5500,
+  'duplex-quad': 6500,
+  private: 2200,
+  dorm: 800,
 }
 
 function estimateCost(data: Partial<FullFormData>): number | null {
