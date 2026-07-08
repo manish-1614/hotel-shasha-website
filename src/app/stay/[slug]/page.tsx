@@ -131,6 +131,20 @@ export default async function RoomDetailPage({ params }: Props) {
                         per person/night
                       </div>
                     )}
+                    {v.images && v.images.length > 0 && (
+                      <div className="mt-4 grid grid-cols-2 gap-2">
+                        {v.images.map((img, idx) => (
+                          <div key={idx} className="relative aspect-video rounded-lg overflow-hidden border border-parchment-dark group">
+                            <Image
+                              src={img}
+                              alt={`${v.label} Image ${idx + 1}`}
+                              fill
+                              className="object-cover transition-transform duration-500 group-hover:scale-105"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>

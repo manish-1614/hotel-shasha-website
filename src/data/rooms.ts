@@ -3,6 +3,7 @@ export interface RoomVariant {
   occupancy: string
   priceRoomOnly: number
   priceCpPerPerson: number
+  images?: string[]
 }
 
 export interface Room {
@@ -46,12 +47,14 @@ export const rooms: Room[] = [
         occupancy: '3 guests',
         priceRoomOnly: 5500,
         priceCpPerPerson: 1800,
+        images: ['/images/room/rustic-wooden-bedroom-homestay-desktop.webp'],
       },
       {
         label: 'Quad Sharing',
         occupancy: '4 guests',
         priceRoomOnly: 6500,
         priceCpPerPerson: 1800,
+        images: ['/images/room/cozy-wooden-bedroom-loft-himalayan-homestay-desktop.webp', '/images/room/wooden-bedroom-forest-view-desktop.webp'],
       },
     ],
     gradient: 'from-forest-dark to-forest',
@@ -63,6 +66,8 @@ export const rooms: Room[] = [
       '/images/bathroom/homestay-bathroom-interior-desktop.webp',
       '/images/bathroom/homestay-rustic-wash-area-desktop.webp',
       '/images/exterior/hillside-village-himalayan-view-desktop.webp',
+      '/images/room/cozy-wooden-bedroom-loft-himalayan-homestay-desktop.webp',
+      '/images/room/wooden-bedroom-forest-view-desktop.webp',
     ],
   },
   {
@@ -94,14 +99,15 @@ export const rooms: Room[] = [
       },
     ],
     gradient: 'from-warm-wood to-amber',
-    image: '/images/room/cozy-wooden-homestay-room-desktop.webp',
+    image: '/images/room/homestay-room-mountain-view-desktop.webp',
     gallery: [
-      '/images/room/cozy-wooden-homestay-room-desktop.webp',
+      '/images/room/homestay-room-mountain-view-desktop.webp',
+      '/images/room/cozy-bedroom-with-bright-blue-windows-himalayan-homestay-desktop.webp',
+      '/images/room/cozy-hotel-bedroom-with-paisley-bedding-desktop.webp',
       '/images/room/homestay-bedroom-forest-view-desktop.webp',
-      '/images/room/rustic-room-interior-desktop.webp',
+      '/images/room/simple-cozy-homestay-bedroom-himalayan-mountains-desktop.webp',
+      '/images/room/cozy-himalayan-homestay-room-mountain-view-desktop.webp',
       '/images/bathroom/bathroom-western-toilet-shower-desktop.webp',
-      '/images/room/cozy-window-seat-room-desktop.webp',
-      '/images/room/homestay-wooden-staircase-interior-desktop.webp',
     ],
   },
   {
