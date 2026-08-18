@@ -5,6 +5,8 @@ import { Users, Check } from 'lucide-react'
 import { rooms, getRoomBySlug, formatPrice } from '@/data/rooms'
 import ScrollReveal from '@/components/ui/ScrollReveal'
 import Button from '@/components/ui/Button'
+import RoomGallery from '@/components/stay/RoomGallery'
+
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -161,23 +163,9 @@ export default async function RoomDetailPage({ params }: Props) {
               Gallery
             </h2>
           </ScrollReveal>
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
-            {room.gallery.map((img, i) => (
-              <ScrollReveal key={i} delay={i * 0.08}>
-                <div
-                  className="aspect-4/3 rounded-xl relative overflow-hidden shadow-soft group"
-                >
-                  <Image
-                    src={img}
-                    alt={`${room.name} — Photo ${i + 1}`}
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500" />
-                </div>
-              </ScrollReveal>
-            ))}
-          </div>
+          <ScrollReveal>
+            <RoomGallery images={room.gallery} roomName={room.name} />
+          </ScrollReveal>
         </div>
       </section>
 
